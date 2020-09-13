@@ -9,7 +9,7 @@
 title: 过千帆
 brief-intro: .NET Programmer
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://blog.guoqianfan.com" # the base hostname & protocol for your site
+url: "http://tb.guoqianfan.com" # the base hostname & protocol for your site
 
 # 默认配置
 defaults:
@@ -62,10 +62,18 @@ google_analytics_id: UA-117955320-1 # google 分析追踪id
 
 # Build settings
 markdown: kramdown
-
+highlighter: rouge
 kramdown:
   input: GFM
-  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    default_lang: html
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
 
 # port
 # port: 1234
