@@ -1,0 +1,39 @@
+<p>暂无</p>
+{% if site.link %}
+<script>
+    (async function () {
+        const linkConf = '{{ site.link | replace: "'", '"' }}';
+        let linkObj;
+        try {
+            linkObj = JSON.parse(linkConf);
+        } catch (ex) {
+            console.log('link不是json! ' + linkConf);
+        }
+
+        if (!linkObj) {
+            try {
+                console.log('尝试链接获取...');
+                linkObj = await fetch(new Request(linkConf)).then(response => response.json());
+            } catch (ex) {
+                console.log('获取友链时出错! ' + ex);
+            }
+        }
+
+        if (linkObj) {
+            let p = document.querySelector('#友情链接 + p'), isFirst = true;
+            p.firstChild.remove();
+            for (let key in linkObj) {
+                const a = document.createElement('a');
+                a.textContent = key;
+                a.href = linkObj[key];
+                a.target = '_blank';
+                if (!isFirst) {
+                    p.append(' | ');
+                }
+                p.appendChild(a);
+                isFirst = false;
+            }
+        }
+    })();
+</script>
+{% endif %}

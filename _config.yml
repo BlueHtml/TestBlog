@@ -1,0 +1,83 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: 过千帆的记事本
+brief-intro: 记录点滴
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://note.guoqianfan.com" # the base hostname & protocol for your site
+
+# 默认配置
+defaults:
+  -
+    scope:
+      path: "" # 一个空的字符串代表项目中所有的文件（应用到指定路径的文件）
+      type: "posts"
+    values:
+      layout: "post"
+      author: "过千帆"
+
+# Index settings
+index_title: 欢迎来到过千帆的记事本！ # 主页的标题
+index_brief-intro: 过尽千帆皆不是，斜晖脉脉水悠悠。 # 主页的简短介绍
+
+permalink: /:year/:month/:day/:title/ # 短链接模式：/:year:month/:title/
+
+# other links
+twitter_username: 
+facebook_username: 
+github_username: BlueHtml
+email: gg@guoqianfan.com
+weibo_username: 
+zhihu_username: 
+linkedIn_username: 
+dribbble_username:
+telegram_username: Xiao_C
+cnblogs_addr: 
+rss_path: /feed.xml
+
+description_footer: 存在的痕迹
+
+# comments
+# two ways to comment, only choose one, and use your own short name
+# 两种评论插件，选一个就好了，使用自己的 short_name
+livere_shortname: MTAyMC81Mjc1Ni8yOTIzMw==
+disqus_shortname: #https-17xiao-coding-me
+
+# link 友链
+# 两种方式：1.本地定义；2.远程返回(json)
+link: "{'过千帆的博客':'https://blog.guoqianfan.com'}"
+# link: https://mock-api.com/rnNWayKl.mock/link
+
+# statistic analysis 统计代码
+# 百度统计 id，将统计代码替换为自己的百度统计id，即
+# hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxx";
+# xxxxx字符串
+baidu_tongji_id: fbc3d6124344895dc5d3439066160d3c
+google_analytics_id: G-0ZVV5B1EV9 # google 衡量 ID
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+
+# port
+# port: 1234
+
+# url
+category_dir: category/
+tag_dir: tag/
+
+# excerpt  摘要标识：设置为4个换行。
+# Jekyll 会自动取每篇文章从开头到第一次出现excerpt_separator的地方作为文章的摘要， 并将此内容保存到变量post.excerpt。
+# 如果你不喜欢自动生成摘要，你可以在文章的YAML中增加excerpt来覆盖它。
+excerpt_separator: "\n\n\n\n"
+
+# paginate
+gems: [jekyll-paginate]
+paginate: 6
