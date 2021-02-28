@@ -11,7 +11,7 @@ excerpt: 本文介绍下clash-v2ray-ssr的订阅怎么互转，以及如何搭�
 
 ## 公开api
 
-- subconverter: <https://subcc.herokuapp.com/version>，**自己搭建，不要使用别人的，会看到链接的**
+- subconverter: <https://subcc.herokuapp.com/version>，**请自己搭建，不要使用别人的，会看到链接的**
 - sub-web：<https://sub-web.opo.repl.co/>
 
 ## subconverter-后端
