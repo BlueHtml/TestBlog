@@ -147,7 +147,7 @@ VS插件OzCode的功能强大，简单易用，可是是收费的。不过OzCode
 
 ##### 图示
 
-![](https://img.guoqianfan.com/note/2021/03/vs里使用快速监视.jpg 'vs里使用快速监视')
+![vs里使用快速监视](https://img.guoqianfan.com/note/2021/03/vs里使用快速监视.jpg)
 
 #### VS里使用断点设置里的【操作】
 
@@ -177,7 +177,7 @@ VS插件OzCode的功能强大，简单易用，可是是收费的。不过OzCode
 
 下图是**不填条件偷懒法**：*每个Linq语句的结果让下一个Linq语句输出，下一个Linq语句不要设置条件，只设置操作*。所以图中是 **`OrderBy`输出`Where`的执行结果**。
 
-![](https://img.guoqianfan.com/note/2021/03/vs里使用断点设置里的操作-不填条件偷懒法.png 'vs里使用断点设置里的操作-不填条件偷懒法')
+![vs里使用断点设置里的操作-不填条件偷懒法](https://img.guoqianfan.com/note/2021/03/vs里使用断点设置里的操作-不填条件偷懒法.png)
 
 #### 使用OzCode
 
