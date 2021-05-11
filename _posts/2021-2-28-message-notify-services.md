@@ -77,7 +77,7 @@ WxPusher必须要创建应用。也可以创建主题。
 
 管理后台：<https://work.weixin.qq.com/wework_admin/frame>
 
-注册企业微信，创建应用，参考[微信实时推送验证码，真香！](https://post.m.smzdm.com/p/aoozp7pn/)。
+注册企业微信，创建应用，参考[~~微信实时推送验证码，真香！~~](https://post.m.smzdm.com/p/aoozp7pn/)。已失效，请参考[这个](https://api.kuku.me/wechatwork)。
 
 注意：创建企业微信后，还需要邀请自己加入，然后在微信收到消息后，会自动加入的（仅限自己）！貌似延迟挺高的。。。
 

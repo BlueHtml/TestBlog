@@ -2,7 +2,7 @@
 layout: post
 title:  "在VS中调试LINQ(Lambda)"
 categories: 编程
-tags: csharp linq debug
+tags: vs csharp linq debug
 excerpt: 本文介绍下怎么在VS中调试LINQ(Lambda)
 ---
 
