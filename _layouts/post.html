@@ -101,5 +101,9 @@ layout: default
         aTags[i].setAttribute('target', '_blank')
     }
 }());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
 </script>
 <script src="{{ "/js/pageContent.js " | prepend: site.baseurl }}" charset="utf-8"></script>
