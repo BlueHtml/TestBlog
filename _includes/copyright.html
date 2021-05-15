@@ -1,4 +1,4 @@
-{% if page.author == site.title %}
+{% if site.title contains page.author %}
 <hr>
 <p>
     本文会经常更新，请阅读原文： <a href="{{ site.url }}{{ page.url }}">{{ site.url }}{{ page.url }}</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
