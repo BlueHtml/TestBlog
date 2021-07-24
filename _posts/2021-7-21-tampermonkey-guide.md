@@ -20,7 +20,9 @@ excerpt: 本文介绍下Tampermonkey脚本的语法和要点
 
 iframe中可以放一个完整的网页。
 
-如果网页里有多个iframe，tamp在每个iframe**都会被触发和运行**，但是顺序**不固定**。在每个iframe中执行时，默认的上下文是**当前iframe**的上下文。可以使用`window.parent`来获取`上级window`。
+如果网页里有多个iframe，Tampermonkey脚本在每个iframe**都会被触发和运行**，但是顺序**不固定**（每个iframe里网页的加载顺序是不确定的）。
+
+在每个iframe中执行时，默认的上下文是**当前iframe**的上下文。可以使用`window.parent`来获取`上级window`。
 
 ## Userscript Header
 
@@ -148,8 +150,7 @@ Code:
 ```
 // @connect <value>
 ```
-<value> 可以具有以下值
-
+`<value>`可以具有以下值：
 - 域名，例如`tampermonkey.net`（这也将允许**所有子域**）
 - 子域名，即`safari.tampermonkey.net`
 - `self`，即脚本运行的网址
