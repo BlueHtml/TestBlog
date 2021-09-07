@@ -16,6 +16,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@main
+    - name: Replace
+      run: |
+        wget https://gist.githubusercontent.com/BlueHtml/43edb364cd18ab7af70d94227a98fbdb/raw/801610b1293087008249d1069697684e179e2c9b/replace.js
+        npm i --save replace-in-file
+        node replace.js
     # Use GitHub Actions' cache to shorten build times and decrease load on servers
     - uses: actions/cache@v2
       with:
