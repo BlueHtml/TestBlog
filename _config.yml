@@ -9,7 +9,7 @@
 title: 过千帆的记事本
 brief-intro: 记录点滴
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://note.guoqianfan.com" # the base hostname & protocol for your site
+url: "https://tb.guoqianfan.com" # the base hostname & protocol for your site
 
 # 默认配置
 defaults:
