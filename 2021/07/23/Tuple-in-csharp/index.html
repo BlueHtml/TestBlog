@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>C#中的Tuple</title>
+    <meta name="description" content="本文介绍下C#中的Tuple(元组)和值元组">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/07/23/Tuple-in-csharp/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>C#中的Tuple</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-07-23
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#编程" title="Category: 编程" rel="category">编程</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a-->
+        <a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a>&nbsp;
+    
+        <!--a href="/tag/#cs%E5%9F%BA%E7%A1%80" title="Tag: cs基础" rel="tag">cs基础</a-->
+        <a href="/tag/#cs基础" title="Tag: cs基础" rel="tag">cs基础</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a>    <ul>
+      <li><a href="#旧tuple的问题" id="markdown-toc-旧tuple的问题">旧Tuple的问题</a></li>
+      <li><a href="#value-tuples-值元组" id="markdown-toc-value-tuples-值元组">Value Tuples-值元组</a></li>
+      <li><a href="#区别与混淆" id="markdown-toc-区别与混淆">区别与混淆</a></li>
+    </ul>
+  </li>
+  <li><a href="#常用" id="markdown-toc-常用">常用</a>    <ul>
+      <li><a href="#方法返回值" id="markdown-toc-方法返回值">方法返回值</a></li>
+      <li><a href="#接收返回值" id="markdown-toc-接收返回值">接收返回值</a></li>
+    </ul>
+  </li>
+  <li><a href="#高级" id="markdown-toc-高级">高级</a>    <ul>
+      <li><a href="#deconstruct-解构对象为多个变量赋值" id="markdown-toc-deconstruct-解构对象为多个变量赋值">Deconstruct-解构对象+为多个变量赋值</a></li>
+    </ul>
+  </li>
+  <li><a href="#从value-tuples到tuples" id="markdown-toc-从value-tuples到tuples">从Value Tuples到Tuples</a></li>
+  <li><a href="#参考" id="markdown-toc-参考">参考</a></li>
+</ul>
+
+<h2 id="前言">前言</h2>
+
+<h3 id="旧tuple的问题">旧Tuple的问题</h3>
+
+<p>旧Tuple：System.Tuple</p>
+
+<p>Tuple类有一些明显的问题:</p>
+
+<ul>
+  <li>您需要使用ItemX这样的形式来访问属性，这样的属性名可能对调用者来说没有什么含义，如果我们可以使用类似info.Name和info.Age这样的形式来访问会比info.Item1和info.Item2更好。</li>
+  <li>最多只能有8个属性。如果需要更多，最后一个类型参数必须是另一个元组。这使得语法非常难以理解。</li>
+  <li>Tuple是一种引用类型，不像其他基本类型(它们是大多数值类型)，它分配在堆上，对于CPU密集型操作来说，它可能需要太多的对象创建/分配。</li>
+</ul>
+
+<p>旧Tuple有很多问题，所以现在主要使用的是<strong>Value Tuples(值元组)</strong>。</p>
+
+<h3 id="value-tuples-值元组">Value Tuples-值元组</h3>
+
+<p>Value Tuples：System.ValueTuple</p>
+
+<p>本文中使用到的是Value Tuples(值元组)，它是Named Tuple，里面的属性可以看到<strong>名字</strong>。</p>
+
+<ul>
+  <li>值元组类型是值类型，没有继承或其他特性，这意味着值元组具有更好的性能。</li>
+  <li>值元组元素仅仅是<strong>设计层面</strong>的，使代码更具有可读性。它在编译时仍然会被编译为Item1、Item2格式。</li>
+  <li>由于值元组元素的名称<strong>不是</strong>运行时的，所以在使用一些类库(如Newtonsoft)进行序列化时，必须小心使用元组类型。除非你更新过支持新元数据(TupleElementNameAttribute等)的类库，否则你会遇到bug。</li>
+</ul>
+
+<h3 id="区别与混淆">区别与混淆</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Value Tuples-值元组</code>与<code class="language-plaintext highlighter-rouge">匿名类型</code>很容易搞混。</p>
+
+<p><strong>匿名类型</strong>↓↓↓：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">Model</span><span class="p">.</span><span class="nf">Select</span><span class="p">((</span><span class="k">value</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="p">{</span> <span class="n">i</span><span class="p">,</span> <span class="k">value</span> <span class="p">}))</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">item</span><span class="p">.</span><span class="k">value</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">index</span> <span class="p">=</span> <span class="n">item</span><span class="p">.</span><span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">new { i, value }</code>是创建一个新的匿名对象。</p>
+
+<p><strong>Value Tuples-值元组</strong>↓↓↓：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">Model</span><span class="p">.</span><span class="nf">Select</span><span class="p">((</span><span class="k">value</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span> <span class="k">value</span><span class="p">,</span> <span class="n">i</span> <span class="p">)))</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">item</span><span class="p">.</span><span class="k">value</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">index</span> <span class="p">=</span> <span class="n">item</span><span class="p">.</span><span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">( value, i )</code>是<code class="language-plaintext highlighter-rouge">Value Tuples-值元组</code>。用它可以<strong>避免堆分配</strong>。</p>
+
+<p>参考自<a href="https://stackoverflow.com/q/43021/9779472">如何获得foreach的当前迭代的索引？</a></p>
+
+<h2 id="常用">常用</h2>
+
+<h3 id="方法返回值">方法返回值</h3>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">string</span> <span class="n">name</span><span class="p">)</span> <span class="nf">Test</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="kt">string</span> <span class="n">name</span> <span class="p">=</span> <span class="s">"bob"</span><span class="p">;</span>
+
+    <span class="c1">//方式一</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+
+    <span class="c1">//方式二</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">id</span><span class="p">:</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="接收返回值">接收返回值</h3>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//方式一：当做对象的字段来调用</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="nf">Test</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">id</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+<span class="kt">string</span> <span class="n">name</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+
+<span class="c1">//方式二：直接解构-var</span>
+<span class="kt">var</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="p">=</span> <span class="nf">Test</span><span class="p">();</span>
+
+<span class="c1">//方式三：直接解构-显式声明类型</span>
+<span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">string</span> <span class="n">name</span><span class="p">)</span> <span class="p">=</span> <span class="nf">Test</span><span class="p">();</span>
+
+<span class="c1">//多余数据可以使用 _ 丢弃掉</span>
+<span class="kt">var</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=</span> <span class="nf">Test</span><span class="p">();</span>
+<span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=</span> <span class="nf">Test</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="高级">高级</h2>
+
+<h3 id="deconstruct-解构对象为多个变量赋值">Deconstruct-解构对象+为多个变量赋值</h3>
+
+<p>与<code class="language-plaintext highlighter-rouge">Named Tuple</code>同时出现的，我们可以在类中声明一个<code class="language-plaintext highlighter-rouge">Deconstruct</code>用于解构该类。来看一个示例吧：</p>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Point</span>
+<span class="p">{</span>
+    <span class="c1">//为属性X，Y赋值</span>
+    <span class="k">public</span> <span class="nf">Point</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="kt">double</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">double</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">//解构对象</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Deconstruct</span><span class="p">(</span><span class="k">out</span> <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="k">out</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">=&gt;</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="p">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">var</span> <span class="n">p</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Point</span><span class="p">(</span><span class="m">3.14</span><span class="p">,</span> <span class="m">2.71</span><span class="p">);</span>
+<span class="c1">//解构对象</span>
+<span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="p">=</span> <span class="n">p</span><span class="p">;</span>
+
+<span class="c1">//P.X:3.14, P.Y:2.71</span>
+<span class="c1">//x:3.14, y:2.71</span>
+</code></pre></div></div>
+
+<p><strong>注意</strong>：</p>
+<ol>
+  <li>构造方法(<code class="language-plaintext highlighter-rouge">Constructor</code>)<strong>不是</strong>必须的。要想解构对象，只需要定义解构方法(<code class="language-plaintext highlighter-rouge">Deconstruct</code>)即可。</li>
+  <li>解构方法(<code class="language-plaintext highlighter-rouge">Deconstruct</code>)是输出参数，参数必须是<code class="language-plaintext highlighter-rouge">out</code>方式。</li>
+</ol>
+
+<h2 id="从value-tuples到tuples">从Value Tuples到Tuples</h2>
+
+<p>类型System.Tuple和System.ValueTuple提供了一些扩展方法来帮助它们之间相互转换。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var valueTuple = (id: 1, name: "Annie", age: 25, dob: DateTime.Parse("1/1/1993"));
+var tuple = valueTuple.ToTuple();
+</code></pre></div></div>
+
+<h2 id="参考">参考</h2>
+
+<ol>
+  <li>使用现代化 C# 语法简化代码: <a href="https://mp.weixin.qq.com/s?__biz=MzAwNTMxMzg1MA==&amp;mid=2654083545&amp;idx=3&amp;sn=aa2d310c92ae2b6bc6524d84b97fdaaf">https://mp.weixin.qq.com/s?__biz=MzAwNTMxMzg1MA==&amp;mid=2654083545&amp;idx=3&amp;sn=aa2d310c92ae2b6bc6524d84b97fdaaf</a></li>
+  <li>[译]C# 7系列，Part 1: Value Tuples 值元组:<a href="https://www.cnblogs.com/wenhx/p/csharp-7-series-part-1-value-tuples.html">https://www.cnblogs.com/wenhx/p/csharp-7-series-part-1-value-tuples.html</a></li>
+</ol>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/07/23/Tuple-in-csharp/">https://tb.guoqianfan.com/2021/07/23/Tuple-in-csharp/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2021/07/22/%E8%83%8C%E4%B9%A6%E6%8A%B9%E9%BB%91%E5%92%8C%E7%B2%89%E8%BD%AC%E9%BB%91/">背书抹黑和粉转黑</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/07/31/%E4%BA%BA%E4%B9%8B%E8%80%81%E5%B0%91/">人之老少</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>clash-v2ray-ssr订阅互转</title>
+    <meta name="description" content="本文介绍下clash-v2ray-ssr的订阅怎么互转，以及如何搭建自己的subconverter和sub-web。">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/02/21/clash-v2ray-ssr-sub-convert/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>clash-v2ray-ssr订阅互转</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-02-21
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#技术" title="Category: 技术" rel="category">技术</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#clash" title="Tag: clash" rel="tag">clash</a-->
+        <a href="/tag/#clash" title="Tag: clash" rel="tag">clash</a>&nbsp;
+    
+        <!--a href="/tag/#v2ray" title="Tag: v2ray" rel="tag">v2ray</a-->
+        <a href="/tag/#v2ray" title="Tag: v2ray" rel="tag">v2ray</a>&nbsp;
+    
+        <!--a href="/tag/#ssr" title="Tag: ssr" rel="tag">ssr</a-->
+        <a href="/tag/#ssr" title="Tag: ssr" rel="tag">ssr</a>&nbsp;
+    
+        <!--a href="/tag/#%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91" title="Tag: 科学上网" rel="tag">科学上网</a-->
+        <a href="/tag/#科学上网" title="Tag: 科学上网" rel="tag">科学上网</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#公开api" id="markdown-toc-公开api">公开api</a></li>
+  <li><a href="#subconverter-后端" id="markdown-toc-subconverter-后端">subconverter-后端</a>    <ul>
+      <li><a href="#部署到heroku" id="markdown-toc-部署到heroku">部署到heroku</a></li>
+    </ul>
+  </li>
+  <li><a href="#sub-web-前端" id="markdown-toc-sub-web-前端">sub-web-前端</a></li>
+</ul>
+
+<h2 id="公开api">公开api</h2>
+
+<ul>
+  <li>subconverter: <a href="https://subcc.herokuapp.com/version">https://subcc.herokuapp.com/version</a>，<strong>请自己搭建，不要使用别人的，会看到链接的</strong></li>
+  <li>sub-web：<a href="https://sub-web.opo.repl.co/">https://sub-web.opo.repl.co/</a></li>
+</ul>
+
+<h2 id="subconverter-后端">subconverter-后端</h2>
+
+<blockquote>
+  <p>注意，订阅转换不代表协议转换，vemss节点不可能转成ssr，但是可以转成clash节点和ssr节点在一个软件中同时使用</p>
+</blockquote>
+
+<ul>
+  <li>subconverter：<a href="https://github.com/tindy2013/subconverter">https://github.com/tindy2013/subconverter</a></li>
+  <li>文档：<a href="https://github.com/tindy2013/subconverter/blob/master/README-cn.md">https://github.com/tindy2013/subconverter/blob/master/README-cn.md</a></li>
+</ul>
+
+<p>简单用法看<a href="https://github.com/tindy2013/subconverter/blob/master/README-cn.md#简易用法">这里</a>，<code class="language-plaintext highlighter-rouge">target</code>参考<a href="https://github.com/tindy2013/subconverter/blob/master/README-cn.md#支持类型">支持类型</a>的最后一列<code class="language-plaintext highlighter-rouge">参数</code>。注意：<code class="language-plaintext highlighter-rouge">原始订阅url</code>必须要进行<strong>url转码</strong>！</p>
+
+<p>转换结果不太妙：</p>
+<ul>
+  <li>clash -&gt; ssr：失败（原因见后面）</li>
+  <li>v2ray -&gt; ssr：失败（原因见后面）</li>
+  <li>ssr -&gt; clash：成功</li>
+</ul>
+
+<p>注意：</p>
+<ul>
+  <li>v2ray -&gt; ssr：失败！为什么？因为ssr客户端只支持ss和ssr，它是不能处理v2ray的！所以转换失败！</li>
+  <li>clash -&gt; ssr：失败！为什么？同样的原因！clash节点 大部分也都是 v2ray节点，ssr客户端是不能处理的！</li>
+  <li>ssr -&gt; clash：成功。为什么？因为clash是后来出的客户端，它支持ss、ssr、v2ray、clash，clash客户端能支持这些协议，所以能转换。</li>
+</ul>
+
+<h3 id="部署到heroku">部署到heroku</h3>
+
+<p>subconverter-heroku：<a href="https://github.com/BlueHtml/subconverter-heroku">https://github.com/BlueHtml/subconverter-heroku</a></p>
+
+<p>步骤如下：</p>
+<ol>
+  <li>fork<a href="https://github.com/BlueHtml/subconverter-heroku">subconverter-heroku</a>项目</li>
+  <li>添加Secret：<code class="language-plaintext highlighter-rouge">HEROKU_API_KEY</code>和<code class="language-plaintext highlighter-rouge">HEROKU_EMAIL</code></li>
+  <li>修改<code class="language-plaintext highlighter-rouge">heroku.yml</code>里的<code class="language-plaintext highlighter-rouge">heroku_app_name</code>的值</li>
+  <li>点击<code class="language-plaintext highlighter-rouge">Actions</code>-&gt;点击<code class="language-plaintext highlighter-rouge">heroku</code>-&gt;点击<code class="language-plaintext highlighter-rouge">Run workflow</code></li>
+</ol>
+
+<p>部署后访问<code class="language-plaintext highlighter-rouge">/version</code>，如果出现<code class="language-plaintext highlighter-rouge">subconverter v版本号 backend</code>说明部署成功。</p>
+
+<h2 id="sub-web-前端">sub-web-前端</h2>
+
+<ul>
+  <li>sub-web：<a href="https://github.com/CareyWang/sub-web">https://github.com/CareyWang/sub-web</a></li>
+</ul>
+
+<p>sub-web是VUE开发的一个网页，没有后台，不要担心隐私泄露（<em>subconverter后端</em>是在页面上手动输入的）</p>
+
+<p>可以从<a href="https://github.com/CareyWang/sub-web/actions">action的Artifacts</a>下载最新版，解压即可使用。</p>
+
+<p>推荐使用<a href="https://render.com/">render</a>来部署：创建<em>Static Sites</em>，输入github项目地址，设置生成文件目录为<code class="language-plaintext highlighter-rouge">dist</code>，自动部署后即可。</p>
+
+<p>注意：绑定的链接必须是<strong>根路径</strong>，否则网页不展示！！</p>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/02/21/clash-v2ray-ssr-sub-convert/">https://tb.guoqianfan.com/2021/02/21/clash-v2ray-ssr-sub-convert/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2021/02/15/stop-dllhost-and-com_surrogate/">强制停止dllhost和COM Surrogate</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/02/28/message-notify-services/">消息推送服务-消息通知服务</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

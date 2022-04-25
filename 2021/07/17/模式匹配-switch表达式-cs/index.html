@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>C#中的模式匹配和switch表达式</title>
+    <meta name="description" content="本文介绍下C#中的模式匹配和switch表达式">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/07/17/%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D-switch%E8%A1%A8%E8%BE%BE%E5%BC%8F-cs/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>C#中的模式匹配和switch表达式</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-07-17
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#编程" title="Category: 编程" rel="category">编程</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a-->
+        <a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a>&nbsp;
+    
+        <!--a href="/tag/#cs%E5%9F%BA%E7%A1%80" title="Tag: cs基础" rel="tag">cs基础</a-->
+        <a href="/tag/#cs基础" title="Tag: cs基础" rel="tag">cs基础</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#if" id="markdown-toc-if">if</a></li>
+  <li><a href="#switch表达式" id="markdown-toc-switch表达式">switch表达式</a>    <ul>
+      <li><a href="#语法" id="markdown-toc-语法">语法</a></li>
+      <li><a href="#基础-类似if" id="markdown-toc-基础-类似if">基础-类似if</a></li>
+      <li><a href="#高级-逻辑运算符" id="markdown-toc-高级-逻辑运算符">高级-逻辑运算符</a>        <ul>
+          <li><a href="#if转switch" id="markdown-toc-if转switch">if转switch</a></li>
+        </ul>
+      </li>
+      <li><a href="#进阶-switch-expression" id="markdown-toc-进阶-switch-expression">进阶-Switch Expression</a></li>
+    </ul>
+  </li>
+  <li><a href="#传入对象判断其属性" id="markdown-toc-传入对象判断其属性">传入对象判断其属性</a>    <ul>
+      <li><a href="#写法分析" id="markdown-toc-写法分析">写法分析</a></li>
+    </ul>
+  </li>
+  <li><a href="#参考" id="markdown-toc-参考">参考</a></li>
+</ul>
+
+<h2 id="if">if</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(a is string str)
+
+//等价于
+var str = a as string;
+if(str != null) //...
+</code></pre></div></div>
+
+<h2 id="switch表达式">switch表达式</h2>
+
+<h3 id="语法">语法</h3>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">output</span> <span class="p">=</span> <span class="n">input</span> <span class="k">switch</span>
+<span class="p">{</span>
+    <span class="err">模式</span> <span class="m">1</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="m">1</span><span class="p">,</span>
+    <span class="err">模式</span> <span class="m">2</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="m">2</span><span class="p">,</span>
+    <span class="p">...</span>
+    <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="n">n</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>switch是<strong>从上到下</strong>顺序执行的，里面的关键符号含义见下：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">=&gt;</code>：类似于<code class="language-plaintext highlighter-rouge">return</code>，会<strong>退出switch</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">_</code>：类似于<code class="language-plaintext highlighter-rouge">default</code>，会接收任何值，任何值均会匹配上。</li>
+</ul>
+
+<p>注意：</p>
+<ul>
+  <li>在switch表达式内部，会<strong>省略</strong>掉<code class="language-plaintext highlighter-rouge">输入参数</code>，直接写<em>判断</em>或<em>运算</em>即可。</li>
+  <li><code class="language-plaintext highlighter-rouge">switch</code>现在是<strong>表达式</strong>，不是语句块，所以最后大括号右边的<strong>分号</strong>不能少；</li>
+  <li>因为<code class="language-plaintext highlighter-rouge">switch</code>成了表达式，就不能用<code class="language-plaintext highlighter-rouge">case</code>子句了，所以直接用具体的内容来匹配；</li>
+</ul>
+
+<h3 id="基础-类似if">基础-类似if</h3>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">long</span> <span class="n">nnn</span> <span class="p">=</span> <span class="m">666</span><span class="p">;</span>
+<span class="c1">//基础版本</span>
+<span class="nf">SwitchPattern</span><span class="p">(</span><span class="n">nnn</span><span class="p">);</span>
+<span class="c1">//高级版本</span>
+<span class="nf">SwitchPattern2</span><span class="p">(</span><span class="n">nnn</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+
+<span class="c1">//基础版本</span>
+<span class="k">void</span> <span class="nf">SwitchPattern</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">obj0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="kt">string</span> <span class="n">str1</span><span class="p">:</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"string: </span><span class="p">{</span><span class="n">str1</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="kt">int</span> <span class="n">num1</span><span class="p">:</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"int: </span><span class="p">{</span><span class="n">num1</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"未知: </span><span class="p">{</span><span class="n">obj0</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//高级版本</span>
+<span class="k">void</span> <span class="nf">SwitchPattern2</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">string</span> <span class="n">result</span> <span class="p">=</span> <span class="n">obj0</span> <span class="k">switch</span>
+    <span class="p">{</span>
+        <span class="kt">string</span> <span class="n">str1</span> <span class="p">=&gt;</span> <span class="s">$"string: </span><span class="p">{</span><span class="n">str1</span><span class="p">}</span><span class="s">"</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">num1</span> <span class="p">=&gt;</span> <span class="s">$"int: </span><span class="p">{</span><span class="n">num1</span><span class="p">}</span><span class="s">"</span><span class="p">,</span>
+        <span class="n">_</span> <span class="p">=&gt;</span> <span class="s">$"未知: </span><span class="p">{</span><span class="n">obj0</span><span class="p">}</span><span class="s">"</span>
+    <span class="p">};</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="高级-逻辑运算符">高级-逻辑运算符</h3>
+
+<p>在 C# 9 中引入了逻辑运算符<code class="language-plaintext highlighter-rouge">and</code>/<code class="language-plaintext highlighter-rouge">or</code>/<code class="language-plaintext highlighter-rouge">not</code>使得模式匹配更为强大。</p>
+
+<h4 id="if转switch">if转switch</h4>
+
+<p>来看一个判断是否是合法的 Base64 字符的一个方法的变化：</p>
+
+<p>C# 9 之前的代码：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsInvalid</span><span class="p">(</span><span class="kt">char</span> <span class="k">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">intValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="k">value</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intValue</span> <span class="p">&gt;=</span> <span class="m">48</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">&lt;=</span> <span class="m">57</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intValue</span> <span class="p">&gt;=</span> <span class="m">65</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">&lt;=</span> <span class="m">90</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intValue</span> <span class="p">&gt;=</span> <span class="m">97</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">&lt;=</span> <span class="m">122</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">43</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">47</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>使用 C# 9 <strong>增强的模式匹配</strong>之后的代码：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsInvalid</span><span class="p">(</span><span class="kt">char</span> <span class="k">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">intValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="k">value</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">intValue</span> <span class="k">switch</span>
+    <span class="p">{</span>
+            <span class="p">&gt;=</span> <span class="m">48</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">57</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+            <span class="p">&gt;=</span> <span class="m">65</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">90</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+            <span class="p">&gt;=</span> <span class="m">97</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">122</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+            <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">43</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">47</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>除了作为返回值，也可以赋值到变量上：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="k">value</span> <span class="p">=</span> <span class="sc">'='</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">intValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="k">value</span><span class="p">;</span>
+<span class="kt">bool</span> <span class="n">isBase64</span> <span class="p">=</span> <span class="n">intValue</span> <span class="k">switch</span>
+<span class="p">{</span>
+    <span class="p">&gt;=</span> <span class="m">48</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">57</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+    <span class="p">&gt;=</span> <span class="m">65</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">90</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+    <span class="p">&gt;=</span> <span class="m">97</span> <span class="n">and</span> <span class="p">&lt;=</span> <span class="m">122</span> <span class="p">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+    <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">43</span> <span class="p">&amp;&amp;</span> <span class="n">intValue</span> <span class="p">!=</span> <span class="m">47</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="进阶-switch-expression">进阶-Switch Expression</h3>
+
+<p>Switch Expression 是 C# 8 引入的新特性，C# 9 又结合模式匹配做了进一步的增强，使得其功能更加强大，来看示例吧：</p>
+
+<p>修改前的代码是这样的：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">state</span> <span class="p">=</span> <span class="n">ReviewState</span><span class="p">.</span><span class="n">Rejected</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">stateString</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="n">ReviewState</span><span class="p">.</span><span class="n">Rejected</span><span class="p">:</span>
+        <span class="n">stateString</span> <span class="p">=</span> <span class="s">"0"</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">case</span> <span class="n">ReviewState</span><span class="p">.</span><span class="n">Reviewed</span><span class="p">:</span>
+        <span class="n">stateString</span> <span class="p">=</span> <span class="s">"1"</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">case</span> <span class="n">ReviewState</span><span class="p">.</span><span class="n">UnReviewed</span><span class="p">:</span>
+        <span class="n">stateString</span> <span class="p">=</span> <span class="s">"-1"</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>使用 switch expression 之后的代码如下：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">state</span> <span class="p">=</span> <span class="n">ReviewState</span><span class="p">.</span><span class="n">Rejected</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">stateString</span> <span class="p">=</span> <span class="n">state</span> <span class="k">switch</span>
+<span class="p">{</span>
+        <span class="n">ReviewState</span><span class="p">.</span><span class="n">Rejected</span> <span class="p">=&gt;</span> <span class="s">"0"</span><span class="p">,</span>
+        <span class="n">ReviewState</span><span class="p">.</span><span class="n">Reviewed</span> <span class="p">=&gt;</span> <span class="s">"1"</span><span class="p">,</span>
+        <span class="n">ReviewState</span><span class="p">.</span><span class="n">UnReviewed</span> <span class="p">=&gt;</span> <span class="s">"-1"</span><span class="p">,</span>
+        <span class="n">_</span> <span class="p">=&gt;</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>是不是看起来简洁了很多，还有进一步的增加优化，来看下一个示例：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">,</span> <span class="kt">string</span> <span class="n">msg</span><span class="p">)</span> <span class="n">result</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">res</span> <span class="p">=</span> <span class="n">result</span> <span class="k">switch</span>
+<span class="p">{</span>
+        <span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="s">"success"</span><span class="p">,</span>
+        <span class="p">(-</span><span class="m">1</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="s">"xx"</span><span class="p">,</span>
+        <span class="p">(-</span><span class="m">2</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="s">"yy"</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="s">"error"</span>
+<span class="p">};</span>
+<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="传入对象判断其属性">传入对象判断其属性</h2>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">output</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">switch</span>
+<span class="p">{</span>
+    <span class="p">{</span> <span class="err">属性</span><span class="m">1</span><span class="p">:</span> <span class="err">判断</span><span class="m">1</span> <span class="p">}</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="m">1</span><span class="p">,</span>
+    <span class="p">{</span> <span class="err">属性</span><span class="m">1</span><span class="p">:</span> <span class="err">判断</span><span class="m">1</span><span class="p">,</span> <span class="err">属性</span><span class="m">2</span><span class="p">:</span> <span class="err">判断</span><span class="m">2</span> <span class="p">}</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="m">2</span><span class="p">,</span>
+    <span class="p">...</span>
+    <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">result</span> <span class="n">n</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><strong>注意</strong>：</p>
+<ol>
+  <li><strong>不为<code class="language-plaintext highlighter-rouge">null</code></strong> 的写法是<code class="language-plaintext highlighter-rouge">not null</code>，<strong>不要</strong>写成<code class="language-plaintext highlighter-rouge">!null</code>，因为很容易忽略掉<code class="language-plaintext highlighter-rouge">!</code>的！</li>
+  <li>多个属性共同判断时，使用逗号(<code class="language-plaintext highlighter-rouge">,</code>)隔开，代表<code class="language-plaintext highlighter-rouge">判断1 &amp;&amp; 判断2</code>，是<strong>且</strong>的关系</li>
+</ol>
+
+<p>示例如下：</p>
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//常规写法：switch语句</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">od</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">1000f</span> <span class="p">}:</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"发财了，发财了"</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">500f</span> <span class="p">}:</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"好家伙，年度大订单"</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">100f</span> <span class="p">}:</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"订单量不错"</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//高级写法：switch表达式</span>
+<span class="kt">string</span> <span class="n">message</span> <span class="p">=</span> <span class="n">od</span> <span class="k">switch</span>
+<span class="p">{</span>
+    <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">1000f</span> <span class="p">}</span> <span class="p">=&gt;</span> <span class="s">"发财了"</span><span class="p">,</span>
+    <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">500f</span> <span class="p">}</span> <span class="p">=&gt;</span> <span class="s">"年度大订单"</span><span class="p">,</span>
+    <span class="p">{</span> <span class="n">Qty</span><span class="p">:</span> <span class="p">&gt;</span> <span class="m">100f</span> <span class="p">}</span> <span class="p">=&gt;</span> <span class="s">"订单量不错"</span><span class="p">,</span>
+    <span class="n">_</span> <span class="p">=&gt;</span> <span class="s">"未知"</span>
+<span class="p">};</span>
+<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="写法分析">写法分析</h3>
+
+<p>大括号<code class="language-plaintext highlighter-rouge">{}</code>是重点。linq里构造匿名类型，<code class="language-plaintext highlighter-rouge">new Class{}</code>构造指定对象，都用到了大括号<code class="language-plaintext highlighter-rouge">{}</code>。在这里<code class="language-plaintext highlighter-rouge">{}</code>就是构造某实例的成员值用的。</p>
+
+<p><code class="language-plaintext highlighter-rouge">case { Qty: &gt; 1000f }:</code>其实是这样写的：<code class="language-plaintext highlighter-rouge">case Order{ Qty: &gt; 1000f }:</code>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">Order{ ... }</code>就是匹配一个<code class="language-plaintext highlighter-rouge">Order</code>对象实例，并且它的<code class="language-plaintext highlighter-rouge">Qty</code>属性要符合<code class="language-plaintext highlighter-rouge">...</code>条件。由于变量<code class="language-plaintext highlighter-rouge">od</code>始终就是<code class="language-plaintext highlighter-rouge">Order</code>类型，所以，<code class="language-plaintext highlighter-rouge">case</code>子句中的<code class="language-plaintext highlighter-rouge">Order</code>就省略了。</p>
+
+<p>详细请参考<a href="https://www.cnblogs.com/tcjiaan/p/13947928.html">说说 C# 9 新特性的实际运用</a></p>
+
+<h2 id="参考">参考</h2>
+
+<ol>
+  <li>使用现代化 C# 语法简化代码：<a href="https://mp.weixin.qq.com/s?__biz=MzAwNTMxMzg1MA==&amp;mid=2654083545&amp;idx=3&amp;sn=aa2d310c92ae2b6bc6524d84b97fdaaf">https://mp.weixin.qq.com/s?__biz=MzAwNTMxMzg1MA==&amp;mid=2654083545&amp;idx=3&amp;sn=aa2d310c92ae2b6bc6524d84b97fdaaf</a></li>
+  <li>说说 C# 9 新特性的实际运用：<a href="https://www.cnblogs.com/tcjiaan/p/13947928.html">https://www.cnblogs.com/tcjiaan/p/13947928.html</a></li>
+</ol>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/07/17/%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D-switch%E8%A1%A8%E8%BE%BE%E5%BC%8F-cs/">https://tb.guoqianfan.com/2021/07/17/%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D-switch%E8%A1%A8%E8%BE%BE%E5%BC%8F-cs/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2021/07/23/Tuple-in-csharp/">C#中的Tuple
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2021/07/13/Range-and-Index-in-csharp/">C#8中的Range和Index(范围和索引)</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/07/18/%E5%B0%8F%E8%AF%B4-%E7%BC%98%E8%B5%B7-%E5%A4%A7%E7%BA%B2-%E6%AD%BB%E6%B4%BB%E4%B8%8D%E8%B5%B7%E5%BA%8A/">小说-缘起-大纲-死活不起床</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

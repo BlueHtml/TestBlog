@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>强制停止dllhost和COM Surrogate</title>
+    <meta name="description" content="这天打开任务管理器，发现内存占用排第一位的是dllhost.exe。？？没见过这家伙哎，是net core搞出来的吗？没听说过这方面的传闻额。。那就搜一下。结果还不少，大部分都是与其内存占用/CPU占用过高有关。找了半天，说是直接结束进程就行。">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/02/15/stop-dllhost-and-com_surrogate/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>强制停止dllhost和COM Surrogate</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-02-15
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#电脑" title="Category: 电脑" rel="category">电脑</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#win" title="Tag: win" rel="tag">win</a-->
+        <a href="/tag/#win" title="Tag: win" rel="tag">win</a>&nbsp;
+    
+        <!--a href="/tag/#%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8" title="Tag: 任务管理器" rel="tag">任务管理器</a-->
+        <a href="/tag/#任务管理器" title="Tag: 任务管理器" rel="tag">任务管理器</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        
+<p>这天打开任务管理器，发现内存占用排第一位的是<code class="language-plaintext highlighter-rouge">dllhost.exe</code>。？？没见过这家伙哎，是net core搞出来的吗？没听说过这方面的传闻额。。</p>
+
+<p>那就搜一下。结果还不少，大部分都是与其内存占用/CPU占用过高有关。找了半天，说是直接结束进程就行。</p>
+
+<p>我很犹豫，因为是服务器，怕出问题。但是内存不足的话也会导致网站出问题，最后决定直接结束进程。</p>
+
+<p>在<code class="language-plaintext highlighter-rouge">详细信息</code>栏，选中<code class="language-plaintext highlighter-rouge">dllhost.exe</code>，右键<code class="language-plaintext highlighter-rouge">结束任务</code>，然后看了下网站，好像没啥问题。</p>
+
+<p>然后转移到<code class="language-plaintext highlighter-rouge">进程</code>栏，咦？这个内存占用第一位的<code class="language-plaintext highlighter-rouge">COM Surrogate</code>又是什么鬼？刚才网上看到的说它也与<code class="language-plaintext highlighter-rouge">dllhost.exe</code>有关，既然直接结束<code class="language-plaintext highlighter-rouge">dllhost.exe</code>没啥问题，那就把它也终止了吧。</p>
+
+<p>在<code class="language-plaintext highlighter-rouge">进程</code>栏，选中<code class="language-plaintext highlighter-rouge">COM Surrogate</code>，右键<code class="language-plaintext highlighter-rouge">结束任务</code>，然后看了下网站，好像也没啥问题。</p>
+
+<p>经过上面2个操作，内存占用又降低了，功德无量。</p>
+
+<p><strong>注意：</strong></p>
+<ol>
+  <li><a href="http://www.windows764.org/news/13050.html">这里</a>说是终止<code class="language-plaintext highlighter-rouge">dllhost.exe</code>时要选择<code class="language-plaintext highlighter-rouge">结束进程树</code>，这样也能一并终止<code class="language-plaintext highlighter-rouge">COM Surrogate</code>了？下次可以试试</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">dllhost.exe</code>(<code class="language-plaintext highlighter-rouge">COM Surrogate</code>)可能与文件管理器（文件预览/关联）有关，我也没搞清楚。</p>
+
+    <p>详细推荐阅读<a href="https://www.howtogeek.com/326462/what-is-com-surrogate-dllhost.exe-and-why-is-it-running-on-my-pc/">What Is “COM Surrogate” (dllhost.exe) and Why Is It Running on My PC?</a>，里面说可以使用Process Explorer来查看它托管的COM对象或DLL文件。</p>
+  </li>
+</ol>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/02/15/stop-dllhost-and-com_surrogate/">https://tb.guoqianfan.com/2021/02/15/stop-dllhost-and-com_surrogate/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/02/21/clash-v2ray-ssr-sub-convert/">clash-v2ray-ssr订阅互转</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

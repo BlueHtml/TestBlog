@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>在VS中调试LINQ(Lambda)</title>
+    <meta name="description" content="本文介绍下怎么在VS中调试LINQ(Lambda)">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/03/21/debug-linq-with-vs/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>在VS中调试LINQ(Lambda)</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-03-21
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#编程" title="Category: 编程" rel="category">编程</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#vs" title="Tag: vs" rel="tag">vs</a-->
+        <a href="/tag/#vs" title="Tag: vs" rel="tag">vs</a>&nbsp;
+    
+        <!--a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a-->
+        <a href="/tag/#csharp" title="Tag: csharp" rel="tag">csharp</a>&nbsp;
+    
+        <!--a href="/tag/#linq" title="Tag: linq" rel="tag">linq</a-->
+        <a href="/tag/#linq" title="Tag: linq" rel="tag">linq</a>&nbsp;
+    
+        <!--a href="/tag/#debug" title="Tag: debug" rel="tag">debug</a-->
+        <a href="/tag/#debug" title="Tag: debug" rel="tag">debug</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a></li>
+  <li><a href="#vs自带调试" id="markdown-toc-vs自带调试">VS自带调试</a>    <ul>
+      <li><a href="#注意和前提" id="markdown-toc-注意和前提">注意和前提</a></li>
+      <li><a href="#操作步骤" id="markdown-toc-操作步骤">操作步骤</a></li>
+      <li><a href="#断点的高级用法" id="markdown-toc-断点的高级用法">断点的高级用法</a>        <ul>
+          <li><a href="#操作步骤-1" id="markdown-toc-操作步骤-1">操作步骤</a>            <ul>
+              <li><a href="#条件-条件断点" id="markdown-toc-条件-条件断点">条件 (条件断点)</a></li>
+              <li><a href="#操作-断点操作" id="markdown-toc-操作-断点操作">操作 (断点操作)</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#注意" id="markdown-toc-注意">注意</a></li>
+      <li><a href="#疑问" id="markdown-toc-疑问">疑问</a></li>
+      <li><a href="#参考" id="markdown-toc-参考">参考</a></li>
+    </ul>
+  </li>
+  <li><a href="#vs插件ozcode" id="markdown-toc-vs插件ozcode">VS插件OzCode</a></li>
+  <li><a href="#linqpad" id="markdown-toc-linqpad">LinqPad</a></li>
+  <li><a href="#扩展" id="markdown-toc-扩展">扩展</a>    <ul>
+      <li><a href="#如何知道每一步链式调用的结果" id="markdown-toc-如何知道每一步链式调用的结果">如何知道每一步链式调用的结果</a>        <ul>
+          <li><a href="#vs里使用快速监视" id="markdown-toc-vs里使用快速监视">VS里使用【快速监视】</a>            <ul>
+              <li><a href="#注意-1" id="markdown-toc-注意-1">注意</a></li>
+              <li><a href="#图示" id="markdown-toc-图示">图示</a></li>
+            </ul>
+          </li>
+          <li><a href="#vs里使用断点设置里的操作" id="markdown-toc-vs里使用断点设置里的操作">VS里使用断点设置里的【操作】</a>            <ul>
+              <li><a href="#不填条件的偷懒法" id="markdown-toc-不填条件的偷懒法">不填条件的偷懒法</a></li>
+              <li><a href="#注意-2" id="markdown-toc-注意-2">注意</a></li>
+              <li><a href="#图示-1" id="markdown-toc-图示-1">图示</a></li>
+            </ul>
+          </li>
+          <li><a href="#使用ozcode" id="markdown-toc-使用ozcode">使用OzCode</a></li>
+          <li><a href="#使用linqpad" id="markdown-toc-使用linqpad">使用LinqPad</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#参考-1" id="markdown-toc-参考-1">参考</a></li>
+</ul>
+
+<h2 id="前言">前言</h2>
+
+<p>Linq调试有3种方法，准确来说是2种，因为LinqPad算是复制代码段到外部了。。</p>
+<ol>
+  <li>VS自带调试：lambda表达式打断点</li>
+  <li>VS插件OzCode</li>
+  <li>LinqPad</li>
+</ol>
+
+<h2 id="vs自带调试">VS自带调试</h2>
+
+<p>在VS里，是可以对Linq调试的，不过一般打断点都会打在整个语句上，这时候我们要换个打法，把断点打在<strong>lambda表达式</strong>上。</p>
+
+<h3 id="注意和前提">注意和前提</h3>
+
+<ol>
+  <li>Linq是<strong>Linq to object</strong></li>
+  <li>
+    <p>对于Linq to object，只有集合对象是 <strong><code class="language-plaintext highlighter-rouge">IEnumerable</code></strong> 时，才能命中到Linq里的lambda表达式，<code class="language-plaintext highlighter-rouge">IQueryable</code>是不行的。如果是<code class="language-plaintext highlighter-rouge">IQueryable</code>，此时就算在lambda表达式里打上断点，在代码执行时，断点会向上转移到整个语句上。</p>
+
+    <p>如果是<code class="language-plaintext highlighter-rouge">IQueryable</code>，在lambda表达式里打上断点和设置<strong>操作</strong>，操作会输出错误：<code class="language-plaintext highlighter-rouge">order name: id=error CS0103: 当前上下文中不存在名称“p”, name=error CS0103: 当前上下文中不存在名称“p”</code>。</p>
+  </li>
+  <li>对于Linq to object，当集合对象是 <strong><code class="language-plaintext highlighter-rouge">IEnumerable</code></strong> 时，是<strong>延迟执行</strong>的。<strong>只有结果被用到时，才会进行迭代</strong>。所以如果在实际执行前，集合数据发生改变会导致结果集和预期不符。</li>
+  <li>
+    <p>对于Linq to object，当集合对象是 <strong><code class="language-plaintext highlighter-rouge">IEnumerable</code></strong> 时，对单个对象进行迭代的方式是：先把单个对象走完所有的Linq方法后，直到<strong>最后</strong>或者<strong>执行到返回值不是<code class="language-plaintext highlighter-rouge">IEnumerable</code>的Linq方法(该方法会被执行)</strong>，才会迭代下一个对象。</p>
+
+    <p>如果Linq方法的返回值不是<code class="language-plaintext highlighter-rouge">IEnumerable</code>，单个对象的迭代会到该方法(含)为止，会立即进行下一个对象的迭代。所有的对象迭代完毕后，会有一个临时的结果集(非<code class="language-plaintext highlighter-rouge">IEnumerable</code>)，然后把这个结果集重复前面的步骤，直至结束。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">OrderBy()</code>的返回值是<code class="language-plaintext highlighter-rouge">IOrderedEnumerable</code>，所以运行了<code class="language-plaintext highlighter-rouge">OrderBy()</code>后，单个对象的迭代就会结束，继续下一个对象的迭代。，然后把这个暂存结果集执行<code class="language-plaintext highlighter-rouge">OrderBy()</code>后面的Linq方法。</p>
+  </li>
+  <li>在 <strong>4</strong> 的基础上，对于<code class="language-plaintext highlighter-rouge">IEnumerable</code>，如果有多个条件，我们可以写在同一个<code class="language-plaintext highlighter-rouge">Where()</code>里，也可以拆开写在多个<code class="language-plaintext highlighter-rouge">Where()</code>里，不会影响效率的，因为不会生成多个暂存结果集。</li>
+  <li><code class="language-plaintext highlighter-rouge">IEnumerable.AsQueryable().AsEnumerable()</code>是没问题的，遵循<code class="language-plaintext highlighter-rouge">IEnumerable</code>的正常流程：断点不会转移，仍然是延迟执行。</li>
+</ol>
+
+<h3 id="操作步骤">操作步骤</h3>
+
+<p>有2种方法：</p>
+
+<ul>
+  <li><strong>光标</strong>移动到<strong>箭头<code class="language-plaintext highlighter-rouge">=&gt;</code>后面的lambda语句(方法体)内</strong>，按<code class="language-plaintext highlighter-rouge">F9</code>，这个lambda语句的断点就打上了。其他的lambda语句操作类似。</li>
+  <li>右键单击其中一个lambda语句(方法体)内的任意位置，然后选择“断点 - &gt;插入断点”。断点就打在这个lambda表达式上了。</li>
+</ul>
+
+<p>上面的2种方法，都是要把位置选在<strong>lambda语句内</strong>，因为这个语句才是<strong>方法体</strong>，必须要定位到<strong>方法体</strong>内才行！否则还是打在外面了！</p>
+
+<h3 id="断点的高级用法">断点的高级用法</h3>
+
+<p>打断点后，我们可以对断点进行设置，可以达到2个目的：</p>
+<ol>
+  <li>满足条件才触发断点（<strong>条件断点</strong>）</li>
+  <li>触发断点后，输出当前的数据（<strong>断点操作</strong>）</li>
+</ol>
+
+<h4 id="操作步骤-1">操作步骤</h4>
+
+<p>鼠标放在<strong>断点的小红点</strong>上，会出现浮动块，点击里面的<strong>齿轮</strong>，我们可以在里面设置<strong>条件</strong>和<strong>操作</strong>(可以同时勾选设置)。</p>
+<ul>
+  <li>条件：满足条件才触发断点</li>
+  <li>操作：触发断点后，输出当前的数据</li>
+</ul>
+
+<h5 id="条件-条件断点">条件 (条件断点)</h5>
+
+<p>勾上<strong>条件</strong>，会出现设置框，有3个框。
+前2个框可以点开看看一些选择项，第3个框可以输入一些代码，代码里可以使用<strong>变量/方法</strong>，会有智能提示的。</p>
+
+<p>注意：<strong>lambda表达式的参数没有提示，需要手动输入参数名和参数的属性/方法</strong>。</p>
+
+<p>设置好后，只有满足<strong>设置的条件</strong>，才会触发断点。</p>
+
+<h5 id="操作-断点操作">操作 (断点操作)</h5>
+
+<p>勾上<strong>操作</strong>，会出现输入框和勾选框。</p>
+
+<p>我们可以在输入框里输入一些字符串，字符串里可以使用<strong>变量/有返回值的方法</strong>，不过它们必须要放在 <strong><code class="language-plaintext highlighter-rouge">{}</code></strong> 里，会有智能提示的。</p>
+
+<p>注意：<strong>lambda表达式的参数没有提示，需要手动输入参数名和参数的属性/方法</strong>。如果想输出<code class="language-plaintext highlighter-rouge">{}</code>，需要转义<code class="language-plaintext highlighter-rouge">\{</code>；如果想输出<code class="language-plaintext highlighter-rouge">\</code>，需要转义<code class="language-plaintext highlighter-rouge">\\</code>。</p>
+
+<p>另外，还可以使用一些<strong>特殊关键字</strong>，具体的可以把鼠标放在输入框右侧的 <strong>叹号<code class="language-plaintext highlighter-rouge">!</code></strong> 上，会有提示的。</p>
+
+<p>接下来说一下<strong>勾选框(继续执行)</strong>，它默认是<strong>勾选</strong>的：</p>
+<ul>
+  <li>勾选：当触发断点并输出数据后，程序<strong>不会</strong>停下来，会继续执行后面的代码；并且断点的<strong>小红点</strong>会变成<strong>菱形</strong></li>
+  <li>不勾选：当触发断点并输出数据后，程序<strong>会</strong>停下来</li>
+</ul>
+
+<p>设置好后，当断点触发时，会在<strong>输出窗口</strong>里输出数据的。不过<strong>输出窗口</strong>里会有其他信息，此时需要我们慢慢找数据了。。。</p>
+
+<p>如果集合是<code class="language-plaintext highlighter-rouge">IQueryable</code>，在lambda表达式里打上断点和设置<strong>操作</strong>，操作会输出错误：<code class="language-plaintext highlighter-rouge">order name: id=error CS0103: 当前上下文中不存在名称“p”, name=error CS0103: 当前上下文中不存在名称“p”</code>。</p>
+
+<h3 id="注意">注意</h3>
+
+<ol>
+  <li><strong>不能调试LINQ to SQL</strong>，因为LINQ to SQL是翻译成sql语句了。具体见<a href="https://docs.microsoft.com/zh-cn/visualstudio/debugger/debugging-linq?view=vs-2019#BKMK_SteppingAndLinq">单步执行和 LINQ</a></li>
+  <li>
+    <p>由于要对单个Linq语句打断点，建议<strong>每个Linq语句都放在单独的一行</strong>，这样也清晰易读。</p>
+
+    <div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Robot</span> <span class="n">tmpRobot01</span> <span class="p">=</span> <span class="n">robots</span>
+     <span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">miku001</span><span class="p">.</span><span class="n">Id</span><span class="p">)</span>
+     <span class="p">.</span><span class="nf">OrderBy</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+     <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">();</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="疑问">疑问</h3>
+
+<p>如果Linq里没有lambda表达式，打断点就打在了整个语句上，而不是单个Linq上。是这个原因吗？</p>
+
+<h3 id="参考">参考</h3>
+
+<ol>
+  <li>如何在C＃中调试LINQ查询：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">https://michaelscodingspot.com/debug-linq-in-csharp/</a></li>
+  <li>C#中的条件断点：<a href="https://www.c-sharpcorner.com/UploadFile/b1df45/conditional-breakpoints-in-C-Sharp/">https://www.c-sharpcorner.com/UploadFile/b1df45/conditional-breakpoints-in-C-Sharp/</a></li>
+  <li>调试 LINQ：<a href="https://docs.microsoft.com/zh-cn/visualstudio/debugger/debugging-linq?view=vs-2019">https://docs.microsoft.com/zh-cn/visualstudio/debugger/debugging-linq?view=vs-2019</a></li>
+</ol>
+
+<h2 id="vs插件ozcode">VS插件OzCode</h2>
+
+<p>VS插件OzCode的功能强大，简单易用，可是是收费的。不过OzCode对MVP和开源贡献者是免费的，这就需要努力了。</p>
+
+<p>我没使用过，暂时放几个链接：</p>
+<ol>
+  <li>2017年调试LINQ：LINQPad与OzCode：<a href="https://oz-code.com/blog/debugging-linq-available-tool-comparison/">https://oz-code.com/blog/debugging-linq-available-tool-comparison/</a></li>
+  <li>如何在C＃中调试LINQ查询：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">https://michaelscodingspot.com/debug-linq-in-csharp/</a></li>
+  <li>Vs 调试插件 —OzCode 特性讲解+破解工具和教程：<a href="https://blog.csdn.net/sky__god/article/details/86153982">https://blog.csdn.net/sky__god/article/details/86153982</a></li>
+</ol>
+
+<h2 id="linqpad">LinqPad</h2>
+
+<p>这个软件很强大，可以执行代码片段，当然也可以执行Linq了。我几乎不用，暂时放几个链接：</p>
+
+<ol>
+  <li>2017年调试LINQ：LINQPad与OzCode：<a href="https://oz-code.com/blog/debugging-linq-available-tool-comparison/">https://oz-code.com/blog/debugging-linq-available-tool-comparison/</a></li>
+  <li>如何在C＃中调试LINQ查询：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">https://michaelscodingspot.com/debug-linq-in-csharp/</a></li>
+</ol>
+
+<h2 id="扩展">扩展</h2>
+
+<h3 id="如何知道每一步链式调用的结果">如何知道每一步链式调用的结果</h3>
+
+<p>如何知道每一步链式调用的结果？如何知道每一句Linq执行的结果？</p>
+
+<p>有4种方法：</p>
+<ol>
+  <li>VS里使用【快速监视】</li>
+  <li>VS里使用断点设置里的【操作】</li>
+  <li>使用OzCode</li>
+  <li>使用LinqPad</li>
+</ol>
+
+<h4 id="vs里使用快速监视">VS里使用【快速监视】</h4>
+
+<p>首先在<strong>整个语句</strong>上设置断点，当程序运行到该断点时，在集合对象上<code class="language-plaintext highlighter-rouge">右键</code>-&gt;<code class="language-plaintext highlighter-rouge">快速监视</code>，然后把<strong>想知道结果的整个代码</strong>复制到<code class="language-plaintext highlighter-rouge">表达式文本框</code>里，点击右侧的<code class="language-plaintext highlighter-rouge">重新计算</code>，就能知道这步链式调用的结果了。</p>
+
+<h5 id="注意-1">注意</h5>
+
+<ol>
+  <li>
+    <p>只有把断点设在<strong>整个语句</strong>上才能监视到。不能设置在<em>lambda表达式</em>上。</p>
+
+    <p>因为lambda表达式是被编译成了一个方法，断点在这个方法里。运行到该断点时，上下文是这个方法的上下文，只能访问到该方法内部变量，是不能访问到外部对象的！</p>
+  </li>
+  <li>
+    <p>该方式只能适用于返回结果较少的情况，如果返回结果很多，估计会出问题。某人说：<code class="language-plaintext highlighter-rouge">vs没事儿给你抽个风，整个调试器都直接挂，必须重启调试才能继续</code></p>
+  </li>
+</ol>
+
+<h5 id="图示">图示</h5>
+
+<p><img src="https://cdn.jsdelivr.net/gh/BlueHtml/img/note/2021/03/vs里使用快速监视.jpg" alt="vs里使用快速监视" /></p>
+
+<h4 id="vs里使用断点设置里的操作">VS里使用断点设置里的【操作】</h4>
+
+<p>这种方式里的断点是设置在<strong>lambda表达式</strong>上，和前面的<strong>VS里使用【快速监视】</strong> 里的断点位置<strong>不一样</strong>！！！</p>
+
+<p>把断点设置在<strong>lambda表达式</strong>上，然后在断点设置里添加条件和操作。</p>
+<ul>
+  <li>条件<strong>必须和lambda表达式一模一样</strong>，否则数据就不同了，建议直接把lambda表达式复制进去。</li>
+  <li>操作里输出有用的简单的信息。</li>
+</ul>
+
+<p>详细的操作步骤见前面的<a href="#断点的高级用法">断点的高级用法</a></p>
+
+<h5 id="不填条件的偷懒法">不填条件的偷懒法</h5>
+
+<p>由于每个断点设置里的条件都要把lambda表达式复制进去，十分麻烦，推荐一个简单的方法：</p>
+
+<p>每个Linq语句的结果让<strong>下一个</strong>Linq语句输出，下一个Linq语句不要设置条件，只设置操作。（因为只有当前Linq语句满足条件后，才会进入下一个Linq语句。）</p>
+
+<p>不过如果<strong>只有一个Linq语句</strong>或者<strong>是最后一个Linq语句</strong>，这种偷懒方式就不行了，这时候我们只有1种选择：再加一个Linq语句(<code class="language-plaintext highlighter-rouge">OrderBy...</code>)，让它来输出。</p>
+
+<p>其实还有一种选择：<strong>在断点里添加条件</strong>。不过这种选择只适用于<strong>只有一个Linq语句</strong>的情况。<strong>是最后一个Linq语句</strong>时是<strong>不行</strong>的！因为<strong>最后一个Linq语句</strong>输出的是<strong>上一条Linq语句</strong>的信息的，如果添加了条件，输出的就是当前Linq语句的信息了，那<strong>上一条Linq语句</strong>的信息由谁来输出？</p>
+
+<h5 id="注意-2">注意</h5>
+
+<ol>
+  <li>该方式只能适用于返回结果较少的情况，如果返回结果很多，输出窗口估计能翻好几页吧，那就难受了。。</li>
+</ol>
+
+<h5 id="图示-1">图示</h5>
+
+<p>下图是<strong>不填条件偷懒法</strong>：<em>每个Linq语句的结果让下一个Linq语句输出，下一个Linq语句不要设置条件，只设置操作</em>。所以图中是 <strong><code class="language-plaintext highlighter-rouge">OrderBy</code>输出<code class="language-plaintext highlighter-rouge">Where</code>的执行结果</strong>。</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/BlueHtml/img/note/2021/03/vs里使用断点设置里的操作-不填条件偷懒法.png" alt="vs里使用断点设置里的操作-不填条件偷懒法" /></p>
+
+<h4 id="使用ozcode">使用OzCode</h4>
+
+<p>VS插件OzCode很强大，每一个Linq语句的执行结果都能统计并展示出来，详情参考：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">如何在C#中调试LINQ查询</a> 和 <a href="https://michaelscodingspot.com/debug-linq-in-csharp/">如何在C#中调试LINQ查询</a></p>
+
+<h4 id="使用linqpad">使用LinqPad</h4>
+
+<p>LinqPad软件很强大，不过数据源是个问题，操作步骤参考：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">如何在C#中调试LINQ查询</a> 和 <a href="https://michaelscodingspot.com/debug-linq-in-csharp/">如何在C#中调试LINQ查询</a></p>
+
+<h2 id="参考-1">参考</h2>
+
+<ol>
+  <li>2017年调试LINQ：LINQPad与OzCode：<a href="https://oz-code.com/blog/debugging-linq-available-tool-comparison/">https://oz-code.com/blog/debugging-linq-available-tool-comparison/</a></li>
+  <li>如何在C#中调试LINQ查询：<a href="https://michaelscodingspot.com/debug-linq-in-csharp/">https://michaelscodingspot.com/debug-linq-in-csharp/</a></li>
+  <li>C#中的条件断点：<a href="https://www.c-sharpcorner.com/UploadFile/b1df45/conditional-breakpoints-in-C-Sharp/">https://www.c-sharpcorner.com/UploadFile/b1df45/conditional-breakpoints-in-C-Sharp/</a></li>
+  <li>调试 LINQ：<a href="https://docs.microsoft.com/zh-cn/visualstudio/debugger/debugging-linq?view=vs-2019">https://docs.microsoft.com/zh-cn/visualstudio/debugger/debugging-linq?view=vs-2019</a></li>
+</ol>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/03/21/debug-linq-with-vs/">https://tb.guoqianfan.com/2021/03/21/debug-linq-with-vs/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/2021/07/23/Tuple-in-csharp/">C#中的Tuple
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2021/03/14/%E8%8D%86%E6%A5%9A%E8%90%8C%E5%A3%AB/">荆楚萌士</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/04/07/%E9%BA%A6%E7%94%B0%E9%87%8C%E7%9A%84%E5%AE%88%E6%9C%9B%E8%80%85/">《麦田里的守望者》大头马</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Tampermonkey脚本编写指南</title>
+    <meta name="description" content="本文介绍下Tampermonkey脚本的语法和要点">
+
+    <link rel="shortcut icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="icon" href="/favicon.png?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="https://tb.guoqianfan.com/2021/07/21/tampermonkey-guide/">
+    <link rel="alternate" type="application/rss+xml" title="过千帆的记事本" href="https://tb.guoqianfan.com/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?fbc3d6124344895dc5d3439066160d3c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZVV5B1EV9"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	
+	gtag('config', 'G-0ZVV5B1EV9');
+	</script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">过千帆的记事本</a>
+        <small>记录点滴</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Tampermonkey脚本编写指南</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2021-07-21
+            </div>
+
+            <div class="label-card">
+                <i class="fa fa-user"></i>过千帆
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#编程" title="Category: 编程" rel="category">编程</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Tampermonkey" title="Tag: Tampermonkey" rel="tag">Tampermonkey</a-->
+        <a href="/tag/#Tampermonkey" title="Tag: Tampermonkey" rel="tag">Tampermonkey</a>&nbsp;
+    
+        <!--a href="/tag/#js" title="Tag: js" rel="tag">js</a-->
+        <a href="/tag/#js" title="Tag: js" rel="tag">js</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a>    <ul>
+      <li><a href="#iframe-框架中的坑" id="markdown-toc-iframe-框架中的坑">iframe-框架中的坑</a></li>
+    </ul>
+  </li>
+  <li><a href="#userscript-header" id="markdown-toc-userscript-header">Userscript Header</a>    <ul>
+      <li><a href="#name" id="markdown-toc-name">@name</a></li>
+      <li><a href="#namespace" id="markdown-toc-namespace">@namespace</a></li>
+      <li><a href="#version" id="markdown-toc-version">@version</a></li>
+      <li><a href="#author" id="markdown-toc-author">@author</a></li>
+      <li><a href="#description" id="markdown-toc-description">@description</a></li>
+      <li><a href="#homepage-homepageurl-website-and-source" id="markdown-toc-homepage-homepageurl-website-and-source">@homepage, @homepageURL, @website and @source</a></li>
+      <li><a href="#icon-iconurl-and-defaulticon" id="markdown-toc-icon-iconurl-and-defaulticon">@icon, @iconURL and @defaulticon</a></li>
+      <li><a href="#icon64-and-icon64url" id="markdown-toc-icon64-and-icon64url">@icon64 and @icon64URL</a></li>
+      <li><a href="#updateurl" id="markdown-toc-updateurl">@updateURL</a></li>
+      <li><a href="#downloadurl" id="markdown-toc-downloadurl">@downloadURL</a></li>
+      <li><a href="#supporturl" id="markdown-toc-supporturl">@supportURL</a></li>
+      <li><a href="#include" id="markdown-toc-include">@include</a></li>
+      <li><a href="#match" id="markdown-toc-match">@match</a></li>
+      <li><a href="#exclude" id="markdown-toc-exclude">@exclude</a></li>
+      <li><a href="#require" id="markdown-toc-require">@require</a></li>
+      <li><a href="#resource" id="markdown-toc-resource">@resource</a></li>
+      <li><a href="#connect" id="markdown-toc-connect">@connect</a></li>
+      <li><a href="#run-at" id="markdown-toc-run-at">@run-at</a></li>
+      <li><a href="#grant" id="markdown-toc-grant">@grant</a></li>
+      <li><a href="#noframes" id="markdown-toc-noframes">@noframes</a></li>
+      <li><a href="#unwrap" id="markdown-toc-unwrap">@unwrap</a></li>
+      <li><a href="#nocompat" id="markdown-toc-nocompat">@nocompat</a></li>
+    </ul>
+  </li>
+  <li><a href="#application-programming-interfacegm函数" id="markdown-toc-application-programming-interfacegm函数">Application Programming Interface(GM函数)</a>    <ul>
+      <li><a href="#注意" id="markdown-toc-注意">注意</a></li>
+      <li><a href="#unsafewindow" id="markdown-toc-unsafewindow">unsafeWindow</a></li>
+      <li><a href="#subresource-integrity" id="markdown-toc-subresource-integrity">Subresource Integrity</a></li>
+      <li><a href="#gm_addstylecss" id="markdown-toc-gm_addstylecss">GM_addStyle(css)</a></li>
+      <li><a href="#gm_deletevaluename" id="markdown-toc-gm_deletevaluename">GM_deleteValue(name)</a></li>
+      <li><a href="#gm_listvalues" id="markdown-toc-gm_listvalues">GM_listValues()</a></li>
+      <li><a href="#gm_addvaluechangelistener" id="markdown-toc-gm_addvaluechangelistener">GM_addValueChangeListener</a></li>
+      <li><a href="#gm_removevaluechangelistenerlistener_id" id="markdown-toc-gm_removevaluechangelistenerlistener_id">GM_removeValueChangeListener(listener_id)</a></li>
+      <li><a href="#gm_setvaluename-value" id="markdown-toc-gm_setvaluename-value">GM_setValue(name, value)</a></li>
+      <li><a href="#gm_getvaluename-defaultvalue" id="markdown-toc-gm_getvaluename-defaultvalue">GM_getValue(name, defaultValue)</a></li>
+      <li><a href="#gm_logmessage" id="markdown-toc-gm_logmessage">GM_log(message)</a></li>
+      <li><a href="#gm_getresourcetextname" id="markdown-toc-gm_getresourcetextname">GM_getResourceText(name)</a></li>
+      <li><a href="#gm_getresourceurlname" id="markdown-toc-gm_getresourceurlname">GM_getResourceURL(name)</a></li>
+      <li><a href="#gm_registermenucommandname-fn-accesskey" id="markdown-toc-gm_registermenucommandname-fn-accesskey">GM_registerMenuCommand(name, fn, accessKey)</a></li>
+      <li><a href="#gm_unregistermenucommandmenucmdid" id="markdown-toc-gm_unregistermenucommandmenucmdid">GM_unregisterMenuCommand(menuCmdId)</a></li>
+      <li><a href="#gm_openintaburl-options-gm_openintaburl-loadinbackground" id="markdown-toc-gm_openintaburl-options-gm_openintaburl-loadinbackground">GM_openInTab(url, options), GM_openInTab(url, loadInBackground)</a></li>
+      <li><a href="#gm_xmlhttprequestdetails" id="markdown-toc-gm_xmlhttprequestdetails">GM_xmlhttpRequest(details)</a></li>
+      <li><a href="#gm_downloaddetails-gm_downloadurl-name" id="markdown-toc-gm_downloaddetails-gm_downloadurl-name">GM_download(details), GM_download(url, name)</a></li>
+      <li><a href="#gm_gettabcb" id="markdown-toc-gm_gettabcb">GM_getTab(cb)</a></li>
+      <li><a href="#gm_savetabtab" id="markdown-toc-gm_savetabtab">GM_saveTab(tab)</a></li>
+      <li><a href="#gm_gettabscb" id="markdown-toc-gm_gettabscb">GM_getTabs(cb)</a></li>
+      <li><a href="#gm_notificationdetails-ondone-gm_notificationtext-title-image-onclick" id="markdown-toc-gm_notificationdetails-ondone-gm_notificationtext-title-image-onclick">GM_notification(details, ondone), GM_notification(text, title, image, onclick)</a></li>
+      <li><a href="#gm_setclipboarddata-info" id="markdown-toc-gm_setclipboarddata-info">GM_setClipboard(data, info)</a></li>
+      <li><a href="#gm_info" id="markdown-toc-gm_info">GM_info</a></li>
+      <li><a href="#cdatayour_text_here" id="markdown-toc-cdatayour_text_here">&lt;&gt;&lt;![CDATA[your_text_here]]&gt;&lt;/&gt;</a></li>
+    </ul>
+  </li>
+  <li><a href="#公共方法" id="markdown-toc-公共方法">公共方法</a>    <ul>
+      <li><a href="#sleep" id="markdown-toc-sleep">sleep</a></li>
+    </ul>
+  </li>
+  <li><a href="#示例" id="markdown-toc-示例">示例</a>    <ul>
+      <li><a href="#发送请求-gm_xmlhttprequest" id="markdown-toc-发送请求-gm_xmlhttprequest">发送请求-GM_xmlhttpRequest</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="前言">前言</h2>
+
+<blockquote>
+  <ul>
+    <li>来源：<a href="https://my.oschina.net/u/2268567/blog/828528">https://my.oschina.net/u/2268567/blog/828528</a></li>
+    <li>官方文档：<a href="https://www.tampermonkey.net/documentation.php">https://www.tampermonkey.net/documentation.php</a></li>
+  </ul>
+
+  <p>可能还有其他用法暂未列出，多找几个脚本看看就明白了。</p>
+</blockquote>
+
+<h3 id="iframe-框架中的坑">iframe-框架中的坑</h3>
+
+<p>iframe中可以放一个完整的网页。</p>
+
+<p>如果网页里有多个iframe，Tampermonkey脚本在每个iframe<strong>都会被触发和运行</strong>，但是顺序<strong>不固定</strong>（每个iframe里网页的加载顺序是不确定的）。</p>
+
+<p>在每个iframe中执行时，默认的上下文是<strong>当前iframe</strong>的上下文。可以使用<code class="language-plaintext highlighter-rouge">window.parent</code>来获取<code class="language-plaintext highlighter-rouge">上级window</code>。</p>
+
+<h2 id="userscript-header">Userscript Header</h2>
+
+<h3 id="name">@name</h3>
+
+<p>脚本的名称。</p>
+
+<p>可以配置多语言：<code class="language-plaintext highlighter-rouge">@name:{语言}</code>。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @name         Userscript+ : Show Site All UserJS
+// @name:zh      Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
+// @name:zh-CN   Userscript+ : 显示当前网站所有可用的UserJS脚本 Jaeger
+// @name:zh-TW   Userscript+ : 顯示當前網站所有可用的UserJS腳本 Jaeger
+// @name:ja   Userscript +：現在のサイトの利用可能なすべてのUserJSスクリプトを表示するJaeger
+// @name:ru-RU   Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
+// @name:ru   Userscript+ : Показать пользовательские скрипты (UserJS) для сайта. Jaeger
+</code></pre></div></div>
+
+<h3 id="namespace">@namespace</h3>
+
+<p>该脚本的命名空间</p>
+
+<h3 id="version">@version</h3>
+
+<p>版本号。当脚本未从 userscript.org安装时用于更新检查，或 Tampermonkey 有问题时检索脚本元数据的。</p>
+
+<h3 id="author">@author</h3>
+
+<p>作者</p>
+
+<h3 id="description">@description</h3>
+
+<p>简介.</p>
+
+<p>可以配置多语言：<code class="language-plaintext highlighter-rouge">@description:{语言}</code>，示例参照 <strong><code class="language-plaintext highlighter-rouge">@name</code></strong> 的多语言。</p>
+
+<h3 id="homepage-homepageurl-website-and-source">@homepage, @homepageURL, @website and @source</h3>
+
+<p>作者主页，用于在Tampermonkey选项页面上从脚本名称点击跳转。请注意，如果<code class="language-plaintext highlighter-rouge">@namespace</code>标记以<code class="language-plaintext highlighter-rouge">http://</code>开头，此处也要一样。</p>
+
+<h3 id="icon-iconurl-and-defaulticon">@icon, @iconURL and @defaulticon</h3>
+
+<p>低分辨率图标</p>
+
+<p><code class="language-plaintext highlighter-rouge">@icon</code>支持base64，示例如下：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @icon  data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggEBCQHM3fXsAAAAVdJREFUOMudkz2qwkAUhc/goBaGJBgUtBCZyj0ILkpwAW7Bws4yO3AHLiCtEFD8KVREkoiFxZzX5A2KGfN4F04zMN+ce+5c4LMUgDmANYBnrnV+plBSi+FwyHq9TgA2LQpvCiEiABwMBtzv95RSfoNEHy8DYBzHrNVqVEr9BWKcqNFoxF6vx3a7zc1mYyC73a4MogBg7vs+z+czO50OW60Wt9stK5UKp9Mpj8cjq9WqDTBHnjAdxzGQZrPJw+HA31oulzbAWgLoA0CWZVBKIY5jzGYzdLtdE9DlcrFNrY98zobqOA6TJKHW2jg4nU5sNBpFDp6mhVe5rsvVasUwDHm9Xqm15u12o+/7Hy0gD8KatOd5vN/v1FozTVN6nkchxFuI6hsAAIMg4OPxMJCXdtTbR7JJCMEgCJhlGUlyPB4XfumozInrupxMJpRSRtZlKoNYl+m/6/wDuWAjtPfsQuwAAAAASUVORK5CYII=
+</code></pre></div></div>
+
+<h3 id="icon64-and-icon64url">@icon64 and @icon64URL</h3>
+
+<p>此脚本图标的大小为64x64像素。即使使用这个标签，但<code class="language-plaintext highlighter-rouge">@icon</code>已经定义了，那么Tampermonkey选项页面的一些地方仍然使用<code class="language-plaintext highlighter-rouge">@icon</code>定义的图标。</p>
+
+<h3 id="updateurl">@updateURL</h3>
+
+<p>检查更新的网址。注意：需要定义<code class="language-plaintext highlighter-rouge">@version</code></p>
+
+<h3 id="downloadurl">@downloadURL</h3>
+
+<p>检测到更新时将下载脚本的网址</p>
+
+<h3 id="supporturl">@supportURL</h3>
+
+<p>报告问题的网址</p>
+
+<h3 id="include">@include</h3>
+
+<p>脚本生效地址，每行一个。不支持URL hash（即网址中的<code class="language-plaintext highlighter-rouge">#</code>），详情点击<a href="https://forum.tampermonkey.net/viewtopic.php?p=3094">https://forum.tampermonkey.net/viewtopic.php?p=3094</a></p>
+
+<p>示例：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @include http://tampermonkey.net/*
+// @include http://*
+// @include https://*
+// @include *
+</code></pre></div></div>
+
+<h3 id="match">@match</h3>
+
+<p>等于<code class="language-plaintext highlighter-rouge">@include</code>标签（也支持多个），详情点击<a href="http://code.google.com/chrome/extensions/match_patterns.html">http://code.google.com/chrome/extensions/match_patterns.html</a>。</p>
+
+<p>注意：”<all_urls>"语句尚不支持，scheme部分也接受`http*://`和`*://`。</all_urls></p>
+
+<p>好像：</p>
+<ol>
+  <li>
+    <p>host的<strong>尾缀</strong>不能使用<code class="language-plaintext highlighter-rouge">*</code>，否则不起作用。</p>
+
+    <p>例如<code class="language-plaintext highlighter-rouge">https://www.google.com.hk*</code>就<strong>不起作用</strong>，只能使用<code class="language-plaintext highlighter-rouge">https://www.google.com.hk/*</code>才起作用</p>
+  </li>
+</ol>
+
+<h3 id="exclude">@exclude</h3>
+
+<p>不生效页面，每行一个。语法同<a href="#@include">@include</a></p>
+
+<h3 id="require">@require</h3>
+
+<p>脚本本身开始运行之前加载并执行的JavaScript文件，每行一个。注意：通过@require加载的脚本如果是严格模式(“use strict”)的，可能会影响本脚本的严格模式！</p>
+
+<p>示例：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @require https://code.jquery.com/jquery-2.1.4.min.js
+// @require https://code.jquery.com/jquery-2.1.3.min.js#sha256=23456...
+// @require https://code.jquery.com/jquery-2.1.2.min.js#md5=34567...,sha256=6789...
+</code></pre></div></div>
+<p>请阅读本文sub-resource integrity一节，以获取有关如何确保完整性的更多信息。</p>
+
+<h3 id="resource">@resource</h3>
+
+<p>预加载资源，可通过<code class="language-plaintext highlighter-rouge">GM_getResourceURL</code>和<code class="language-plaintext highlighter-rouge">GM_getResourceText</code>读取</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @resource icon1 http://tampermonkey.net/favicon.ico
+// @resource icon2 /images/icon.png
+// @resource html http://tampermonkey.net/index.html
+// @resource xml http://tampermonkey.net/crx/tampermonkey.xml
+// @resource SRIsecured1 http://tampermonkey.net/favicon.ico#md5=123434...
+// @resource SRIsecured2 http://tampermonkey.net/favicon.ico#md5=123434...;sha256=234234...
+</code></pre></div></div>
+<p>请阅读本文sub-resource integrity一节，以获取有关如何确保完整性的更多信息。</p>
+
+<h3 id="connect">@connect</h3>
+
+<p>此标记定义除顶级域以外的，允许被<code class="language-plaintext highlighter-rouge">GM_xmlhttpRequest</code>访问的域名。每行一个。</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @connect &lt;value&gt;
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>可以具有以下值：</p>
+<ul>
+  <li>域名，例如<code class="language-plaintext highlighter-rouge">tampermonkey.net</code>（这也将允许<strong>所有子域</strong>）</li>
+  <li>子域名，即<code class="language-plaintext highlighter-rouge">safari.tampermonkey.net</code></li>
+  <li><code class="language-plaintext highlighter-rouge">self</code>，即脚本运行的网址</li>
+  <li><code class="language-plaintext highlighter-rouge">localhost</code></li>
+  <li>IP地址，例如<code class="language-plaintext highlighter-rouge">1.2.3.4</code></li>
+  <li><code class="language-plaintext highlighter-rouge">*</code>
+如果无法全部声明脚本可能连接到的所有域，那么这是下面是推荐做法：</li>
+</ul>
+
+<p><strong>声明所有已知</strong>的可能由脚本连接的域名，另外添加<code class="language-plaintext highlighter-rouge">// @connect *</code>。这样，大多数用户可以避免确认对话框，对于没有显式标明的域名，Tampermonkey仍然会询问用户是否允许下一次的连接，而且还提供”始终允许所有域”按钮。如果用户点击此按钮，则将自动允许未来的所有请求。用户还可以通过在脚本设置选项卡中将”*“添加到用户域白名单来将所有请求列入白名单。</p>
+
+<h3 id="run-at">@run-at</h3>
+
+<p>定义脚本注入的时刻。</p>
+
+<p>与其他脚本处理程序不同，<code class="language-plaintext highlighter-rouge">@ run-at</code>定义了脚本想要运行的第一个<strong>可能</strong>的时刻。这意味着，通过@require引入的脚本如果在获取时耗费过多时间，那么脚本可能在网页加载后执行。无论如何，在给定注入时刻后发生的所有DOMNodeInserted和DOMContentLoaded事件都会在注入时缓存并传递到用户脚本。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">// @run-at document-start</code>：脚本将尽可能快地注入。</li>
+  <li><code class="language-plaintext highlighter-rouge">// @run-at document-body</code>：如果body元素存在，则脚本将被注入。</li>
+  <li><code class="language-plaintext highlighter-rouge">// @run-at document-end</code>：该脚本将在发生DOMContentLoaded事件时或之后注入。</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">// @run-at document-idle</code>：【<strong>默认</strong>】在发生DOMContentLoaded事件后注入脚本。</p>
+
+    <p>当初始的HTML 文档被完全加载和解析完成之后，DOMContentLoaded 事件被触发，而无需等待样式表、图像和子框架的完全加载。</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">// @run-at context-menu</code>：如果在浏览器上下文菜单（仅限桌面Chrome浏览器）中点击该脚本，则会注入该脚本。注意：如果使用此值，则将忽略所有@include和@exclude语句，但这可能会在将来更改。</li>
+</ul>
+
+<p>注意：<strong>有些网站的某些函数是延迟加载的，所以上面这些脚本注入时刻都会无用，此时只能手动延迟几秒，等待这些函数记载完毕再执行用户脚本。</strong>（可以通过js判断函数是否存在吗？）</p>
+
+<h3 id="grant">@grant</h3>
+
+<p><code class="language-plaintext highlighter-rouge">@grant</code>用于添加<code class="language-plaintext highlighter-rouge">GM</code>函数到白名单，例如unsafeWindow对象和一些强大的window函数。如果没有给出<code class="language-plaintext highlighter-rouge">@grant</code>标签Tampermonkey会猜测脚本需要。</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @grant GM_setValue
+// @grant GM_getValue
+// @grant GM_setClipboard
+// @grant unsafeWindow
+// @grant window.close
+// @grant window.focus
+// ...
+</code></pre></div></div>
+<p>另外window.close和window.focus必须显式声明。</p>
+
+<p>如果使用<code class="language-plaintext highlighter-rouge">// @grant none</code>，沙箱将被禁用，脚本将直接在页面上下文中运行。在此模式下，没有<code class="language-plaintext highlighter-rouge">GM_</code>函数，但<code class="language-plaintext highlighter-rouge">GM_info</code>属性仍然可用。</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @grant none
+</code></pre></div></div>
+
+<h3 id="noframes">@noframes</h3>
+
+<p>此标记使脚本在主页面上运行，但不会在iframe上运行。</p>
+
+<h3 id="unwrap">@unwrap</h3>
+
+<p>此标记会被忽略，因为Google Chrome / Chromium不需要此标记。</p>
+
+<h3 id="nocompat">@nocompat</h3>
+
+<p>由于部分代码可能是专门为Firefox/Greasemonkey所写，通过此标记，Tampermonkey会禁用所有代码优化行为。</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @nocompat支持的浏览器
+// @nocompat Chrome
+</code></pre></div></div>
+
+<h2 id="application-programming-interfacegm函数">Application Programming Interface(GM函数)</h2>
+
+<h3 id="注意">注意</h3>
+
+<p>GM函数要与<code class="language-plaintext highlighter-rouge">@grant</code>配合使用，<code class="language-plaintext highlighter-rouge">@grant</code>用于添加GM函数到白名单。详细参考 <strong>@grant</strong>。</p>
+<ul>
+  <li>无<code class="language-plaintext highlighter-rouge">@grant</code>标签：Tampermonkey会猜测脚本是<strong>需要</strong>的。<code class="language-plaintext highlighter-rouge">window.close</code>和<code class="language-plaintext highlighter-rouge">window.focus</code>必须<strong>显式声明</strong>。</li>
+  <li><code class="language-plaintext highlighter-rouge">@grant none</code>：沙箱将被禁用，脚本将直接在页面上下文中运行。在此模式下，<strong>不能</strong>使用<code class="language-plaintext highlighter-rouge">GM_</code>函数，但<code class="language-plaintext highlighter-rouge">GM_info</code>属性仍然可用。（相当于直接在页面上写js）</li>
+  <li><code class="language-plaintext highlighter-rouge">@grant GM_xxx</code>：只允许运行添加的GM函数。可以用多行添加多个GM函数。</li>
+</ul>
+
+<h3 id="unsafewindow">unsafeWindow</h3>
+
+<p>unsafeWindow对象提供对页面javascript函数和变量的完全访问。</p>
+
+<h3 id="subresource-integrity">Subresource Integrity</h3>
+
+<p><code class="language-plaintext highlighter-rouge">@resource</code>和<code class="language-plaintext highlighter-rouge">@require</code>标记的URL的哈希部分可用于此目的。</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @resource SRIsecured1 http://tampermonkey.net/favicon1.ico#md5=ad34bb...
+// @resource SRIsecured2 http://tampermonkey.net/favicon2.ico#md5=ac3434...,sha256=23fd34...
+// @require https://code.jquery.com/jquery-2.1.1.min.js#md5=45eef...
+// @require https://code.jquery.com/jquery-2.1.2.min.js#md5=ac56d...,sha256=6e789...
+</code></pre></div></div>
+
+<blockquote>
+  <p>个人理解：针对<code class="language-plaintext highlighter-rouge">@resource</code>和<code class="language-plaintext highlighter-rouge">@require</code>的增强功能，可以为其添加hash后缀，hash值不匹配时则<strong>禁止</strong>使用这个资源。</p>
+</blockquote>
+
+<p>Tampermonkey支持 MD5作为备用，其他（SHA-1，SHA-256，SHA-384和SHA-512）依赖于window.crypto。在多个hash（由逗号或分号分隔）的情况下，TM使用最后一个支持的hash。如果外部资源的内容不匹配所选的hash，则资源不会传递给userscript。</p>
+
+<h3 id="gm_addstylecss">GM_addStyle(css)</h3>
+
+<p>将给定的CSS添加到文档。</p>
+
+<p><strong>步骤如下：</strong></p>
+
+<p>1.首先添加GM函数到白名单：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// @grant        GM_addStyle
+</code></pre></div></div>
+
+<p>2.使用<code class="language-plaintext highlighter-rouge">GM_addStyle(css)</code>函数：</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">GM_addStyle</span><span class="p">(</span><span class="s2">`
+.toc-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -40px;
+    z-index: 1;
+}`</span><span class="p">);</span>
+   
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">'</span><span class="s1">.document-toc-container</span><span class="dl">'</span><span class="p">).</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">toc-sticky</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>参考：<a href="https://stackoverflow.com/q/23683439">GM_addStyle equivalent in TamperMonkey</a></p>
+
+<h3 id="gm_deletevaluename">GM_deleteValue(name)</h3>
+
+<p>从storage中删除”name”。</p>
+
+<h3 id="gm_listvalues">GM_listValues()</h3>
+
+<p>列出storage的所有name。</p>
+
+<h3 id="gm_addvaluechangelistener">GM_addValueChangeListener</h3>
+
+<p>语法：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GM_addValueChangeListener(name, function(name, old_value, new_value, remote) {})
+</code></pre></div></div>
+
+<p>向storage添加一个change listener，并返回此监听器ID。</p>
+
+<p><code class="language-plaintext highlighter-rouge">name</code>是被观察变量的名称。</p>
+
+<p>回调函数的<code class="language-plaintext highlighter-rouge">remote</code>参数表明此值的修改者是另一个网页(browser tabs)的实例（true），或是在此脚本实例（false）。</p>
+
+<p><strong>因此此function可通过脚本在不同的网页选项卡互相通信。</strong></p>
+
+<h3 id="gm_removevaluechangelistenerlistener_id">GM_removeValueChangeListener(listener_id)</h3>
+
+<p>通过ID删除change listener。</p>
+
+<h3 id="gm_setvaluename-value">GM_setValue(name, value)</h3>
+
+<p>在storage中存储值。</p>
+
+<h3 id="gm_getvaluename-defaultvalue">GM_getValue(name, defaultValue)</h3>
+
+<p>在storage中取得name的值，取不到则使用defaultValue。</p>
+
+<h3 id="gm_logmessage">GM_log(message)</h3>
+
+<p>将消息记录到控制台。</p>
+
+<h3 id="gm_getresourcetextname">GM_getResourceText(name)</h3>
+
+<p>从script header获取<code class="language-plaintext highlighter-rouge">@resource</code>标记定义的内容。</p>
+
+<h3 id="gm_getresourceurlname">GM_getResourceURL(name)</h3>
+
+<p>从script header获取<code class="language-plaintext highlighter-rouge">@resource</code>标记定义的base64编码的URI。</p>
+
+<h3 id="gm_registermenucommandname-fn-accesskey">GM_registerMenuCommand(name, fn, accessKey)</h3>
+
+<p>在要运行脚本的网页上，在Tampermonkey中注册一个menu，并返回menu的命令 id。</p>
+
+<h3 id="gm_unregistermenucommandmenucmdid">GM_unregisterMenuCommand(menuCmdId)</h3>
+
+<p>通过menu id反注册由GM_registerMenuCommand注册menu。</p>
+
+<h3 id="gm_openintaburl-options-gm_openintaburl-loadinbackground">GM_openInTab(url, options), GM_openInTab(url, loadInBackground)</h3>
+
+<p>使用url打开新tab。</p>
+
+<p>options对象可以有两个属性：’active’决定新的选项卡是否在前台打开，’insert’决定是否在当前标签之后打开新标签页(‘insert’ that inserts the new tab after the current one.)。否则情况都是仅仅添加新选项卡。</p>
+
+<p>‘loadInBackground’与’active’相反，并且被添加以实现Greasemonkey兼容性。如果既没有”active”也没有”loadInBackground”，那么选项卡不会在前台打开。这个函数返回一个对象，该对象具有close方法，onclosed监听器，名为”closed”的标志。</p>
+
+<h3 id="gm_xmlhttprequestdetails">GM_xmlhttpRequest(details)</h3>
+
+<p>详细参考 <a href="https://www.tampermonkey.net/documentation.php#GM_xmlhttpRequest">GM_xmlhttpRequest(details)</a> 和 <a href="#发送请求-gm_xmlhttprequest">示例</a></p>
+
+<p>创建一个xmlHttpRequest。（<strong>需要<code class="language-plaintext highlighter-rouge">@connect</code>支持</strong>）</p>
+
+<p>详细属性：</p>
+<ul>
+  <li>method - GET，HEAD，POST之一</li>
+  <li>url - 目标网址</li>
+  <li>headers - 即user-agent, referer, … (Safari和Android浏览器不支持某些特殊headers</li>
+  <li>data - 通过 POST 请求发送的字符串</li>
+  <li>binary - 以二进制模式发送数据</li>
+  <li>timeout - 超时时间（单位ms）</li>
+  <li>context - 将添加到response对象的属性</li>
+  <li>responseType - arraybuffer，blob，json之一</li>
+  <li>overrideMimeType - request的MIME类型</li>
+  <li>anonymous - request将不发送cookies，参见fetch</li>
+  <li>fetch - (beta) 使用fetch而不是xhr，在Chrome这会导致xhr.abort，details.timeout和xhr.onprogress失效，并使xhr.onreadystatechange只接收readyState4事件。</li>
+  <li>username 用于认证的用户名</li>
+  <li>password 密码</li>
+  <li>
+    <events> - onload onerror, onreadystatechange, onprogress, onloadstart, ontimeout
+
+  - `onloadstart`：如果请求**开始加载**，则执行onloadstart回调
+  - `onload`：如果请求**已加载**，则执行onload回调。
+    
+      `onload`事件绑定到一个方法，方法参数为`响应体`，`响应体`的详细属性参考[GM_xmlhttpRequest(details)](https://www.tampermonkey.net/documentation.php#GM_xmlhttpRequest)
+
+</events>
+  </li>
+</ul>
+<p><strong>注意：</strong></p>
+<ul>
+  <li>details不支持synchronous标志？</li>
+  <li>如果遇到3XX跳转，内部会自动跳转</li>
+  <li>浏览器仍然会处理响应，并设置cookie什么的</li>
+  <li><code class="language-plaintext highlighter-rouge">onload</code>绑定的方法设置断点后，好像不能命中</li>
+</ul>
+
+<h3 id="gm_downloaddetails-gm_downloadurl-name">GM_download(details), GM_download(url, name)</h3>
+
+<p>从给定的 URL 下载。</p>
+
+<p>details可以具有下列属性：</p>
+<ul>
+  <li>url - 下载数据的 url 路径</li>
+  <li>name - 文件名，因为安全原因，文件扩展名必须显式声明于Tampermonkey 白名单。</li>
+  <li>headers - 参见GM_xmlhttpRequest。</li>
+  <li>saveAs - 布尔值，是否显示保存对话框.</li>
+  <li>onload - function() {} - 下载完成后调用的函数</li>
+  <li>
+    <p>onerror - function(download) {} - 当出现错误时调用的函数</p>
+
+    <ul>
+      <li>
+        <p>onerror参数可以具有以下属性：</p>
+
+        <ul>
+          <li>error -错误原因</li>
+          <li>not_enabled -用户未启用下载功能</li>
+          <li>not_whitelisted -所请求的文件扩展名没有列入白名单</li>
+          <li>not_permitted - 用户启用了下载功能，但没有给予下载权限</li>
+          <li>not_supported - 浏览器不支持下载功能</li>
+          <li>not_succeeded -下载启动失败，details属性提供更多信息</li>
+        </ul>
+      </li>
+      <li>
+        <p>details -关于该错误的详细信息</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>根据下载模式，GM_info提供了一个名为downloadMode的属性，该属性设置为以下值之一：native,，disabled，browser.</p>
+
+<h3 id="gm_gettabcb">GM_getTab(cb)</h3>
+
+<p>获取一个tab的持久化对象，只要此选项卡是打开的。</p>
+
+<h3 id="gm_savetabtab">GM_saveTab(tab)</h3>
+
+<p>保存tab对象以在页面unload后重新打开。</p>
+
+<h3 id="gm_gettabscb">GM_getTabs(cb)</h3>
+
+<p>获取所有tab对象的hash，以便与其他脚本实例进行通信。</p>
+
+<h3 id="gm_notificationdetails-ondone-gm_notificationtext-title-image-onclick">GM_notification(details, ondone), GM_notification(text, title, image, onclick)</h3>
+
+<p>显示一个 HTML5 桌面通知（Desktop notification）或高亮当前tab。</p>
+
+<p>details可以具有以下属性：</p>
+
+<ul>
+  <li>text - 通知的文本，如果设置了highlight</li>
+  <li>title - 通知标题（可选）</li>
+  <li>image - 图像（可选）</li>
+  <li>highlight - 布尔值，发送通知时是否要高亮tab（可选）</li>
+  <li>timeout - 多久后通知将会隐藏 (可选，0 = 禁用)</li>
+  <li>ondone - 当关闭通知时调用（无论是由于超时或鼠标单击），或选项卡已经是高亮状态（可选）</li>
+  <li>onclick - 用户单击通知时调用（可选）</li>
+</ul>
+
+<h3 id="gm_setclipboarddata-info">GM_setClipboard(data, info)</h3>
+
+<p>将数据复制到剪贴板。参数 ‘ info ‘ 可以是对象,例如”{ type: ‘text’, mimetype: ‘text/plain’}”或仅仅是一个字符串表达式（text或者html类型）。</p>
+
+<h3 id="gm_info">GM_info</h3>
+
+<p>获取有关脚本和 TM 的一些信息。该对象可能如下所示︰</p>
+
+<p>Code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object+
+---&gt; script: Object+
+------&gt; author: ""
+------&gt;copyright: "2012+, You"
+------&gt;description: "enter something useful"
+------&gt;excludes: Array[0]
+------&gt;homepage: null
+------&gt;icon: null
+------&gt;icon64: null
+------&gt;includes: Array[2]
+------&gt;lastUpdated: 1338465932430
+------&gt;matches: Array[2]
+------&gt;downloadMode: 'browser'
+------&gt;name: "Local File Test"
+------&gt;namespace: "http://use.i.E.your.homepage/"
+------&gt;options: Object+
+---------&gt;awareOfChrome: true
+---------&gt;compat_arrayleft: false
+---------&gt;compat_foreach: false
+---------&gt;compat_forvarin: false
+---------&gt;compat_metadata: false
+---------&gt;compat_prototypes: false
+---------&gt;compat_uW_gmonkey: false
+---------&gt;noframes: false
+---------&gt;override: Object+
+------------&gt;excludes: false
+------------&gt;includes: false
+------------&gt;orig_excludes: Array[0]
+------------&gt;orig_includes: Array[2]
+------------&gt;use_excludes: Array[0]
+------------&gt;use_includes: Array[0]
+---------&gt;run_at: "document-end"
+------&gt;position: 1
+------&gt;resources: Array[0]
+------&gt;run-at: "document-end"
+------&gt;system: false
+------&gt;unwrap: false
+------&gt;version: "0.1"
+---&gt; scriptMetaStr: undefined
+---&gt; scriptSource: "// ==UserScript==\n// @name       Local File Test\n ...."
+---&gt; scriptUpdateURL: undefined
+---&gt; scriptWillUpdate: false
+---&gt; scriptHandler: "Tampermonkey"
+---&gt; isIncognito: false
+---&gt; version: "4.0.25"
+</code></pre></div></div>
+
+<h3 id="cdatayour_text_here">&lt;&gt;&lt;![CDATA[your_text_here]]&gt;&lt;/&gt;</h3>
+
+<p>Tampermonkey支持这种写法，会尝试自动检测脚本是否需要启用此兼容性选项。</p>
+
+<h2 id="公共方法">公共方法</h2>
+
+<h3 id="sleep">sleep</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">sleep</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">ms</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>注意</strong>：使用时，父方法必须是异步方法！父方法必须被其他方法调用，并且调用时不能进行等待！</p>
+
+<h2 id="示例">示例</h2>
+
+<h3 id="发送请求-gm_xmlhttprequest">发送请求-GM_xmlhttpRequest</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">GM_xmlhttpRequest</span><span class="p">({</span>
+   <span class="na">method</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span> 
+   <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://localhost:7777</span><span class="dl">"</span><span class="p">,</span> 
+   <span class="na">data</span><span class="p">:</span> <span class="dl">"</span><span class="s2">testing123</span><span class="dl">"</span><span class="p">,</span>
+   <span class="na">headers</span><span class="p">:</span>  <span class="p">{</span>
+         <span class="dl">"</span><span class="s2">Content-Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/x-www-form-urlencoded</span><span class="dl">"</span>
+             <span class="p">},</span>
+   <span class="na">onload</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> 
+   <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+        
+<hr>
+<p>
+    本文会经常更新，请阅读原文： <a href="https://tb.guoqianfan.com/2021/07/21/tampermonkey-guide/">https://tb.guoqianfan.com/2021/07/21/tampermonkey-guide/</a> ，以避免陈旧错误知识的误导，同时有更好的阅读体验。
+</p>
+<p>    
+    如果你想持续阅读我的最新博客，请点击 <a href="/feed.xml">RSS 订阅</a>。
+</p>
+<p>
+    <a rel="知识共享许可协议" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <img alt="知识共享许可协议" src="https://img.guoqianfan.com/public/by-nc-sa.svg" />
+    </a>
+    本作品采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a> 进行许可。欢迎转载、使用、重新发布，但务必保留文章署名 过千帆的记事本（包含链接： <a href="https://tb.guoqianfan.com">https://tb.guoqianfan.com</a> ），不得用于商业目的，基于本文修改后的作品务必以相同的许可发布。如有任何疑问，请 <a href="mailto:gg@guoqianfan.com">与我联系</a> 。
+</p>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2021/07/20/%E5%B0%8F%E8%AF%B4%E5%86%99%E4%BD%9C%E4%B9%9F%E5%BA%94%E9%81%B5%E5%BE%AA-%E4%B8%80%E5%8D%B3%E6%98%AF%E5%85%A8-%E5%85%A8%E5%8D%B3%E6%98%AF%E4%B8%80-%E6%B3%95%E5%88%99/">小说写作也应遵循“一即是全，全即是一”法则</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2021/07/22/%E8%83%8C%E4%B9%A6%E6%8A%B9%E9%BB%91%E5%92%8C%E7%B2%89%E8%BD%AC%E9%BB%91/">背书抹黑和粉转黑</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC81Mjc1Ni8yOTIzMw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+
+document.querySelectorAll("div.highlighter-rouge[class*='language']")
+    .forEach(p => p.setAttribute('data-lang', [...p.classList].find(c => c.includes("language")).split('-')[1].replace('plaintext',''))
+    );
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             存在的痕迹 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/BlueHtml" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:gg@guoqianfan.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>         
+            <a href="https://t.me/Xiao_C" title="Telegram"><i class="fa fa-telegram" aria-hidden="true"></i></a>  
+            <a href="/feed.xml" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i></a> 
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
